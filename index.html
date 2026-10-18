@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arène des Origines - Site Officiel & Confidentialité</title>
+    <title>Arène des Origines - Le Jeu de Combat Mobile Ultime</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #f59e0b;
-            --primary-glow: rgba(245, 158, 11, 0.45);
+            --primary-glow: rgba(245, 158, 11, 0.5);
             --secondary: #6366f1;
-            --dark-bg: #090a10;
-            --card-bg: rgba(18, 20, 32, 0.92);
-            --card-border: rgba(255, 255, 255, 0.1);
+            --secondary-glow: rgba(99, 102, 241, 0.4);
+            --dark-bg: #07080d;
+            --card-bg: rgba(16, 18, 28, 0.94);
+            --card-border: rgba(255, 255, 255, 0.12);
             --text-light: #f3f4f6;
             --text-muted: #9ca3af;
             --accent-green: #10b981;
@@ -34,30 +35,30 @@
             line-height: 1.6;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.2) 0%, transparent 45%),
-                radial-gradient(circle at 85% 65%, rgba(245, 158, 11, 0.16) 0%, transparent 50%),
-                radial-gradient(circle at 50% 90%, rgba(16, 185, 129, 0.1) 0%, transparent 40%);
+                radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.22) 0%, transparent 45%),
+                radial-gradient(circle at 85% 55%, rgba(245, 158, 11, 0.18) 0%, transparent 50%),
+                radial-gradient(circle at 50% 90%, rgba(16, 185, 129, 0.12) 0%, transparent 40%);
             background-attachment: fixed;
         }
 
-        h1, h2, h3, .logo {
+        h1, h2, h3, h4, .logo {
             font-family: 'Cinzel', serif;
             letter-spacing: 1px;
         }
 
-        /* HEADER */
+        /* HEADER & NAVIGATION */
         header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            padding: 1.1rem 7%;
+            padding: 1rem 7%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             backdrop-filter: blur(16px);
-            background: rgba(9, 10, 16, 0.88);
+            background: rgba(7, 8, 13, 0.9);
             border-bottom: 1px solid var(--card-border);
         }
 
@@ -80,7 +81,7 @@
         nav {
             display: flex;
             align-items: center;
-            gap: 1.6rem;
+            gap: 1.5rem;
         }
 
         nav a {
@@ -95,23 +96,36 @@
             color: var(--primary);
         }
 
-        .nav-btn {
-            background: linear-gradient(135deg, var(--primary), #d97706);
-            color: #000 !important;
-            padding: 0.45rem 1.1rem;
+        .audio-toggle-btn {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.45rem 1rem;
             border-radius: 999px;
-            font-weight: 700 !important;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .audio-toggle-btn:hover {
+            background: var(--primary);
+            color: #000;
             box-shadow: 0 0 15px var(--primary-glow);
         }
 
         /* HERO SECTION */
         .hero {
-            min-height: 92vh;
+            min-height: 94vh;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8rem 7% 4rem;
+            padding: 7.5rem 7% 4rem;
             gap: 3rem;
+            position: relative;
         }
 
         .hero-content {
@@ -133,7 +147,7 @@
         }
 
         .hero h1 {
-            font-size: 3.4rem;
+            font-size: 3.5rem;
             line-height: 1.15;
             margin-bottom: 1.2rem;
             background: linear-gradient(135deg, #ffffff 40%, var(--primary) 100%);
@@ -142,7 +156,7 @@
         }
 
         .hero p {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             color: var(--text-muted);
             margin-bottom: 2.2rem;
         }
@@ -214,7 +228,7 @@
             transform: translateY(-3px);
         }
 
-        /* MOCKUP VISUEL */
+        /* ARENA STAGE PREVIEW (HERO) */
         .hero-visual {
             position: relative;
             display: flex;
@@ -222,68 +236,72 @@
             align-items: center;
         }
 
-        .phone-frame {
-            width: 280px;
-            height: 560px;
-            background: #0d0f17;
-            border: 8px solid #2d3139;
-            border-radius: 44px;
-            box-shadow: 
-                0 0 50px rgba(99, 102, 241, 0.25),
-                0 25px 60px rgba(0, 0, 0, 0.9);
+        .arena-stage {
+            width: 320px;
+            height: 480px;
+            background: radial-gradient(circle at 50% 60%, #1a1e2f 0%, #07080e 85%);
+            border: 2px solid rgba(245, 158, 11, 0.4);
+            border-radius: 30px;
+            box-shadow: 0 0 50px rgba(245, 158, 11, 0.25), 0 25px 60px rgba(0, 0, 0, 0.9);
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            background: linear-gradient(160deg, #1e2230 0%, #0a0b12 100%);
+            justify-content: space-between;
+            padding: 2rem 1.5rem;
         }
 
-        .phone-notch {
+        .arena-pedestal {
             position: absolute;
-            top: 10px;
-            width: 85px;
-            height: 18px;
-            background: #000;
-            border-radius: 10px;
-            z-index: 10;
+            bottom: 25px;
+            width: 260px;
+            height: 90px;
+            background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.35) 0%, rgba(99, 102, 241, 0.2) 60%, transparent 80%);
+            border-radius: 50%;
+            border: 2px dashed rgba(245, 158, 11, 0.6);
+            animation: rotateArena 25s linear infinite;
         }
 
-        .screen-content {
+        @keyframes rotateArena {
+            from { transform: rotateX(65deg) rotate(0deg); }
+            to { transform: rotateX(65deg) rotate(360deg); }
+        }
+
+        .warrior-idle {
+            position: relative;
+            z-index: 2;
+            font-size: 6.5rem;
+            filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.8));
+            animation: idleBreathe 3.5s ease-in-out infinite;
+        }
+
+        @keyframes idleBreathe {
+            0%, 100% { transform: scale(1) translateY(0); }
+            50% { transform: scale(1.04) translateY(-8px); }
+        }
+
+        .stage-title {
+            z-index: 2;
             text-align: center;
-            padding: 2rem 1.2rem;
         }
 
-        .screen-emblem {
-            font-size: 4rem;
-            margin-bottom: 0.8rem;
-            filter: drop-shadow(0 0 20px var(--primary));
-            animation: pulse 3s infinite ease-in-out;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px var(--primary)); }
-            50% { transform: scale(1.08); filter: drop-shadow(0 0 30px var(--primary)); }
-        }
-
-        .screen-title {
-            font-size: 1.35rem;
-            font-weight: 900;
+        .stage-title h3 {
+            font-size: 1.5rem;
             color: #fff;
-            margin-bottom: 0.4rem;
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
         }
 
-        .screen-tagline {
-            font-size: 0.85rem;
+        .stage-title p {
             color: var(--primary);
-            text-transform: uppercase;
+            font-size: 0.9rem;
             letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        /* SECTIONS */
+        /* SECTIONS GENERAL */
         section {
-            padding: 5.5rem 7%;
+            padding: 6rem 7%;
         }
 
         .section-header {
@@ -293,7 +311,7 @@
         }
 
         .section-header h2 {
-            font-size: 2.5rem;
+            font-size: 2.6rem;
             margin-bottom: 0.8rem;
             color: #fff;
         }
@@ -303,57 +321,179 @@
             font-size: 1.15rem;
         }
 
-        /* FEATURES GRID */
-        .features-grid {
+        /* SECTION PERSONNAGES DANS L'ARENE */
+        .characters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .char-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 2.2rem 1.8rem;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .char-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(245, 158, 11, 0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+        }
+
+        /* L'Arène du personnage */
+        .char-arena-box {
+            position: relative;
+            height: 220px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, rgba(30, 36, 56, 0.8) 0%, rgba(9, 10, 16, 0.9) 70%);
+            border-radius: 18px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+        }
+
+        .char-pedestal {
+            position: absolute;
+            bottom: 25px;
+            width: 170px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px dashed rgba(245, 158, 11, 0.5);
+            background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.3) 0%, transparent 70%);
+            transform: rotateX(65deg);
+            animation: rotatePedestal 20s linear infinite;
+        }
+
+        @keyframes rotatePedestal {
+            from { transform: rotateX(65deg) rotate(0deg); }
+            to { transform: rotateX(65deg) rotate(360deg); }
+        }
+
+        .char-avatar {
+            position: relative;
+            z-index: 3;
+            font-size: 5rem;
+            animation: breathe 3.5s ease-in-out infinite;
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.9));
+        }
+
+        .char-card:nth-child(2) .char-avatar { animation-delay: 0.5s; }
+        .char-card:nth-child(3) .char-avatar { animation-delay: 1s; }
+        .char-card:nth-child(4) .char-avatar { animation-delay: 1.5s; }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1) translateY(0); }
+            50% { transform: scale(1.05) translateY(-6px); }
+        }
+
+        .char-title {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 0.3rem;
+        }
+
+        .char-role {
+            color: var(--primary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .char-desc {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .attacks-list {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .attacks-list h4 {
+            font-size: 0.95rem;
+            color: #e5e7eb;
+            margin-bottom: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .attack-item {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        .attack-item strong {
+            color: var(--primary);
+        }
+
+        /* SECTION TIPS & ASTUCES */
+        .tips-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
         }
 
-        .feature-card {
+        .tip-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            padding: 2.3rem 2rem;
+            padding: 2.2rem 1.8rem;
             border-radius: 20px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
+            position: relative;
         }
 
-        .feature-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(245, 158, 11, 0.4);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1.2rem;
+        .tip-badge {
             display: inline-block;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            padding: 0.2rem 0.8rem;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
         }
 
-        .feature-card h3 {
+        .tip-card h3 {
             font-size: 1.35rem;
-            margin-bottom: 0.6rem;
             color: #fff;
+            margin-bottom: 0.8rem;
         }
 
-        .feature-card p {
+        .tip-card p {
             color: var(--text-muted);
             font-size: 1.05rem;
         }
 
-        /* SOUTIEN */
+        /* SOUTIEN & DONATION */
         .support-box {
             background: linear-gradient(135deg, rgba(30, 33, 50, 0.95), rgba(15, 17, 28, 0.98));
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            border-radius: 24px;
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            border-radius: 28px;
             padding: 3.5rem 2.5rem;
             text-align: center;
-            max-width: 820px;
+            max-width: 840px;
             margin: 0 auto;
             box-shadow: 0 15px 45px rgba(0,0,0,0.6);
-            position: relative;
-            overflow: hidden;
         }
 
         .donation-options {
@@ -368,23 +508,12 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            padding: 0.85rem 1.6rem;
+            padding: 0.9rem 1.8rem;
             border-radius: 14px;
             font-weight: 700;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             text-decoration: none;
             transition: all 0.3s;
-        }
-
-        .btn-kofi {
-            background: #ff5e5b;
-            color: #fff;
-            box-shadow: 0 4px 20px rgba(255, 94, 91, 0.35);
-        }
-
-        .btn-kofi:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(255, 94, 91, 0.55);
         }
 
         .btn-paypal {
@@ -398,7 +527,18 @@
             box-shadow: 0 8px 30px rgba(0, 112, 186, 0.55);
         }
 
-        /* CONTACT FORM */
+        .btn-kofi {
+            background: #ff5e5b;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(255, 94, 91, 0.35);
+        }
+
+        .btn-kofi:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255, 94, 91, 0.55);
+        }
+
+        /* FORMULAIRE DE CONTACT */
         .contact-container {
             max-width: 750px;
             margin: 0 auto;
@@ -481,7 +621,7 @@
             box-shadow: 0 8px 30px rgba(245, 158, 11, 0.6);
         }
 
-        /* PRIVACY POLICY STYLES */
+        /* POLITIQUE DE CONFIDENTIALITE */
         .privacy-box {
             max-width: 860px;
             margin: 0 auto;
@@ -581,27 +721,30 @@
     <header>
         <a href="#" class="logo">⚔️ <span>Arène</span> des Origines</a>
         <nav>
-            <a href="#features">Le Jeu</a>
-            <a href="#amelioration">Suggestions</a>
+            <a href="#personnages">Combattants</a>
+            <a href="#tips">Tips & Astuces</a>
             <a href="#soutenir">Soutenir</a>
+            <a href="#amelioration">Suggestions</a>
             <a href="#confidentialite">Confidentialité</a>
-            <a href="#amelioration" class="nav-btn">Proposer une idée</a>
         </nav>
+        <button id="audioBtn" class="audio-toggle-btn" onclick="toggleAudio()">
+            🔊 Musique d'arène
+        </button>
     </header>
 
     <!-- HERO SECTION -->
     <section class="hero">
         <div class="hero-content">
-            <div class="badge">Jeu Mobile Indépendant • Apple & Android</div>
+            <div class="badge">⚔️ Are You Ready to Fight ?</div>
             <h1>Battez-vous dans l'Arène des Origines</h1>
-            <p>Un jeu de combat et de stratégie tactique créé avec passion. Débloquez vos combattants, perfectionnez vos compétences et aidez le créateur à faire évoluer le jeu au fil de vos retours !</p>
+            <p>Le jeu de combat et de stratégie tactique créé en toute indépendance. Choisissez votre classe de combattant, maîtrisez vos attaques spéciales et partez à la conquête des étages de l'arène !</p>
             <div class="cta-buttons">
-                <a href="#amelioration" class="btn-appstore">
+                <a href="#personnages" class="btn-appstore">
                     <svg viewBox="0 0 170 170">
                         <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.05-7.62-7.85-11.77-14.44-6-9.58-10.74-20.24-14.22-31.98-3.48-11.74-5.22-23.07-5.22-33.99 0-14.36 3.75-26.4 11.23-36.14 7.48-9.74 16.92-14.74 28.34-15.01 4.7 0 10.02 1.34 15.98 4.02 5.95 2.68 9.77 4.08 11.45 4.19 1.57-.11 5.5-1.57 11.78-4.37 6.29-2.8 11.73-4.09 16.33-3.87 13.88.67 24.8 5.48 32.74 14.44-12.08 7.37-17.98 17.52-17.69 30.45.29 10.18 4.3 18.66 12.03 25.43 7.73 6.77 17.06 10.63 27.98 11.58-2.35 7.04-5.31 14.25-8.87 21.63zM119.22 31.84c0-7.39 2.66-14.42 7.99-21.09 5.32-6.68 11.95-10.75 19.87-12.22.45 1.56.67 3.02.67 4.37 0 7.39-2.73 14.53-8.2 21.43-5.46 6.9-12.15 10.9-20.06 12.01-.11-1.34-.27-2.84-.27-4.5z"/>
                     </svg>
                     <div class="btn-text">
-                        <small>Bientôt sur l'</small>
+                        <small>Télécharger sur l'</small>
                         <strong>App Store</strong>
                     </div>
                 </a>
@@ -610,75 +753,160 @@
         </div>
 
         <div class="hero-visual">
-            <div class="phone-frame">
-                <div class="phone-notch"></div>
-                <div class="screen-content">
-                    <div class="screen-emblem">⚡</div>
-                    <div class="screen-title">ARÈNE DES ORIGINES</div>
-                    <div class="screen-tagline">Combat Tactique Mobile</div>
+            <div class="arena-stage">
+                <div class="stage-title">
+                    <p>Plateforme d'invocation</p>
+                    <h3>L'Arène Ancienne</h3>
+                </div>
+                <div class="warrior-idle">🛡️</div>
+                <div class="arena-pedestal"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION PERSONNAGES & LEURS ATTAQUES -->
+    <section id="personnages">
+        <div class="section-header">
+            <h2>Les Héros de l'Arène</h2>
+            <p>Chaque champion possède un style de combat propre, des forces uniques et son propre arsenal d'attaques.</p>
+        </div>
+
+        <div class="characters-grid">
+
+            <!-- BERSERKER -->
+            <div class="char-card">
+                <div class="char-arena-box">
+                    <div class="char-pedestal"></div>
+                    <div class="char-avatar">🪓</div>
+                </div>
+                <h3 class="char-title">Le Berserker</h3>
+                <div class="char-role">Puissance Brute & Armes Lourdes</div>
+                <p class="char-desc">Le plus lourd et le plus dévastateur des combattants. Ses frappes à la hache infligent des dégâts colossaux capables de briser n'importe quelle défense.</p>
+                <div class="attacks-list">
+                    <h4>⚔️ Attaques & Coups Spéciaux :</h4>
+                    <div class="attack-item"><span>•</span> <div><strong>Lancer de hache (Axe Throw) :</strong> Projette son arme à mi-distance pour surprendre l'ennemi.</div></div>
+                    <div class="attack-item"><span>•</span> <div><strong>Rising Slash :</strong> Balayage vertical puissant qui fait décoller l'adversaire du sol.</div></div>
+                    <div class="attack-item"><span>•</span> <div><strong>Frappe écrasante :</strong> Impact dévastateur causant d'importants dégâts de choc.</div></div>
                 </div>
             </div>
+
+            <!-- GUERRIER MASQUE -->
+            <div class="char-card">
+                <div class="char-arena-box">
+                    <div class="char-pedestal"></div>
+                    <div class="char-avatar">⚔️</div>
+                </div>
+                <h3 class="char-title">Le Guerrier Masqué</h3>
+                <div class="char-role">Contrôle de l'Arène & Projection</div>
+                <p class="char-desc">Combattant discipliné doté d'une armure solide. Spécialiste des projections et des impacts au sol pour éjecter ses adversaires hors de portée.</p>
+                <div class="attacks-list">
+                    <h4>⚔️ Attaques & Coups Spéciaux :</h4>
+                    <div class="attack-item"><span>•</span> <div><strong>Smash au sol :</strong> Frappe la dalle de l'arène et projette l'adversaire très loin.</div></div>
+                    <div class="attack-item"><span>•</span> <div><strong>Dive Kick :</strong> Plongeon sauté aérien imparable pour casser la garde adverse.</div></div>
+                    <div class="attack-item"><span>•</span> <div><strong>Nova & Scatter :</strong> Onde d'énergie circulaire repoussant les assaillants.</div></div>
+                </div>
+            </div>
+
+            <!-- ASSASSIN -->
+            <div class="char-card">
+                <div class="char-arena-box">
+                    <div class="char-pedestal"></div>
+                    <div class="char-avatar">🗡️</div>
+                </div>
+                <h3 class="char-title">L'Assassin Encapuchonné</h3>
+                <div class="char-role">Vitesse Extrême & Téléportation</div>
+                <p class="char-desc">Maître de la furtivité et des feintes. Il exécute des dashs foudroyants, frappe aux points vitaux et disparaît dans les ombres avant de subir un coup.</p>
+                <div class="attacks-list">
+                    <h4>⚔️ Attaques & Coups Spéciaux :</h4>
+                    <div class="attack-item"><span>•</span> <div><strong>Dash Fantôme :</strong> Ruée fulgurante vers l'avant traversant les attaques ennemies.</div></div>
+                    <div class="attack-item"><span>•</span> <div><strong>Boomerang de lames :</strong> Lancer de dagues courbes revenant infliger un second coup.</div></div>
+                    <div class="attack-item"><span>•</span> <div><strong>Shadow Rise & Low Sweep :</strong> Balayage ras du sol suivi d'une réapparition aérienne.</div></div>
+                </div>
+            </div>
+
+            <!-- MAGE DE FEU -->
+            <div class="char-card">
+                <div class="char-arena-box">
+                    <div class="char-pedestal"></div>
+                    <div class="char-avatar">🔥</div>
+                </div>
+                <h3 class="char-title">Le Mage de Feu</h3>
+                <div class="char-role">Magie Élémentaire & Distance</div>
+                <p class="char-desc">Maître du feu incandescent. Redoutable à longue portée grâce à ses sorts continus, mais vulnérable au corps à corps direct.</p>
+                <div class="attacks-list">
+                    <h4>⚔️ Attaques & Coups Spéciaux :</h4>
+                    <div class="attack-item"><span>•</span> <div><strong>Projectile Enflammé :</strong> Boule de feu rapide maintenant la pression à distance.</div></div>
+                    <div class="attack-item"><span>•</span> <div><strong>Flame Wave :</strong> Vague de feu balayant toute la largeur de l'arène.</div></div>
+                    <div class="attack-item"><span>•</span> <div><strong>Lava Pool :</strong> Bassin de lave au sol infligeant des brûlures continues à qui y pose le pied.</div></div>
+                </div>
+            </div>
+
         </div>
     </section>
 
-    <!-- SECTION FONCTIONNALITÉS -->
-    <section id="features">
+    <!-- SECTION TIPS & ASTUCES DE JEU -->
+    <section id="tips" style="background: rgba(0,0,0,0.25);">
         <div class="section-header">
-            <h2>L'Expérience de Jeu</h2>
-            <p>Pensé pour offrir des combats rapides, dynamiques et stratégiques sur mobile.</p>
+            <h2>Tips & Astuces de Combat</h2>
+            <p>Les clés pour survivre aux étages supérieurs du mode Histoire et dominer en match multijoueur.</p>
         </div>
 
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🗡️</div>
-                <h3>Combats Dynamiques</h3>
-                <p>Enchaînez les frappes, esquivez au timing parfait et retournez la situation grâce à vos attaques spéciales.</p>
+        <div class="tips-grid">
+            <div class="tip-card">
+                <span class="tip-badge">Timing & Rythme</span>
+                <h3>La règle du contre-temps</h3>
+                <p>N'attaquez pas en continu dans le vide. Attendez la fin d'une animation adverse lourde (comme le Smash du Guerrier ou le Rising Slash du Berserker) pour punir avec votre combo le plus rapide.</p>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">💡</div>
-                <h3>Évolutif grâce aux joueurs</h3>
-                <p>Le jeu grandit avec sa communauté : vos retours et propositions de nouveaux personnages sont directement étudiés pour les mises à jour.</p>
+            <div class="tip-card">
+                <span class="tip-badge">Gestion de l'espace</span>
+                <h3>Contrôler le centre de l'arène</h3>
+                <p>Rester au centre vous offre toujours deux issues d'esquive. Être acculé sur les bords de l'arène vous expose aux projections et aux zones de lave sans échappatoire.</p>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">💎</div>
-                <h3>Projet Indépendant</h3>
-                <p>Développé en toute autonomie avec l'aide des dernières technologies d'assistance et d'IA générative.</p>
+            <div class="tip-card">
+                <span class="tip-badge">Face au Mage</span>
+                <h3>Casser la distance</h3>
+                <p>Face à un Mage de feu, n'hésitez pas à utiliser vos dashs ou vos attaques sautées (Dive Kick) pour passer au-dessus des projectiles et l'engager au corps à corps.</p>
+            </div>
+            <div class="tip-card">
+                <span class="tip-badge">Multijoueur</span>
+                <h3>Stabilité en Wi-Fi local</h3>
+                <p>Pour des duels sans latence, connectez les deux appareils sur le même réseau Wi-Fi local : le jeu synchronise directement les coups de téléphone à téléphone sans transiter par Internet.</p>
             </div>
         </div>
     </section>
 
-    <!-- SECTION SOUTIEN / DONATION -->
+    <!-- SECTION SOUTIEN / DONATION (AVEC VOTRE LIEN PAYPAL ET KO-FI) -->
     <section id="soutenir">
         <div class="support-box">
-            <div style="font-size: 3rem; margin-bottom: 0.8rem;">☕✨</div>
+            <div style="font-size: 3.2rem; margin-bottom: 0.8rem;">☕🛡️</div>
             <h2>Soutenir le Créateur</h2>
-            <p style="color: var(--text-muted); font-size: 1.15rem; max-width: 620px; margin: 0 auto 1.5rem;">
-                En tant que créateur indépendant, chaque soutien compte énormément pour financer les frais de publication (comptes développeur Apple & Google), l'ajout de nouveaux graphismes, de musiques originales et de nouveaux niveaux.
+            <p style="color: var(--text-muted); font-size: 1.15rem; max-width: 650px; margin: 0 auto 1.5rem;">
+                Je ne suis pas développeur de métier : je développe <strong>Arène des Origines</strong> en solo et en autodidacte sur mon temps libre. Vos soutiens m'aident directement à financer les frais de publication Apple & Google et l'ajout de nouveaux héros !
             </p>
             <div class="donation-options">
+                <a href="https://paypal.me/arenedesorigines" target="_blank" class="donation-btn btn-paypal">
+                    💙 Soutenir via PayPal
+                </a>
                 <a href="https://ko-fi.com" target="_blank" class="donation-btn btn-kofi">
                     ☕ M'offrir un café sur Ko-fi
                 </a>
-                <a href="https://paypal.me" target="_blank" class="donation-btn btn-paypal">
-                    💙 Soutenir via PayPal
-                </a>
             </div>
             <p style="margin-top: 1.5rem; font-size: 0.95rem; color: #9ca3af;">
-                Un immense merci à tous les guerriers de l'arène qui participent à cette aventure !
+                Un grand merci à tous ceux qui soutiennent ce projet indépendant !
             </p>
         </div>
     </section>
 
-    <!-- SECTION CONTACT & AMÉLIORATION -->
+    <!-- SECTION BOÎTE À IDÉES -->
     <section id="amelioration">
         <div class="section-header">
             <h2>Boîte à Idées & Améliorations</h2>
-            <p>Vous avez une suggestion de gameplay, un bug à signaler ou une idée de nouveau combattant ? Écrivez-moi directement !</p>
+            <p>Une idée de nouveau champion, un réglage de gameplay ou un bug à signaler ? Vos retours façonnent les prochaines mises à jour du jeu !</p>
         </div>
 
         <div class="contact-container">
             <div class="contact-info-banner">
-                📧 Contact direct créateur : <a href="mailto:binyamine555@gmail.com">binyamine555@gmail.com</a>
+                📧 E-mail créateur : <a href="mailto:binyamine555@gmail.com">binyamine555@gmail.com</a>
             </div>
 
             <form action="mailto:binyamine555@gmail.com" method="GET" enctype="text/plain">
@@ -688,17 +916,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="type">Type de retour</label>
+                    <label for="type">Type de proposition</label>
                     <select id="type" name="type">
                         <option value="idee">💡 Idée d'amélioration de gameplay</option>
-                        <option value="personnage">🛡️ Idée de nouveau personnage / arène</option>
-                        <option value="bug">🐛 Signalement d'un bug / problème</option>
+                        <option value="personnage">🛡️ Idée de nouveau personnage ou arène</option>
+                        <option value="equilibrage">⚖️ Équilibrage d'une attaque / classe</option>
+                        <option value="bug">🐛 Signalement d'un bug / incident</option>
                         <option value="autre">✉️ Autre message</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="message">Votre message ou suggestion détaillée</label>
+                    <label for="message">Détails de votre suggestion</label>
                     <textarea id="message" name="body" rows="5" placeholder="Décrivez votre idée pour rendre le jeu encore meilleur..." required></textarea>
                 </div>
 
@@ -707,7 +936,7 @@
         </div>
     </section>
 
-    <!-- SECTION POLITIQUE DE CONFIDENTIALITÉ COMPLÈTE DU JEU -->
+    <!-- SECTION POLITIQUE DE CONFIDENTIALITÉ COMPLÈTE -->
     <section id="confidentialite">
         <div class="section-header">
             <h2>Politique de Confidentialité</h2>
@@ -716,7 +945,7 @@
 
         <div class="privacy-box">
             <div class="privacy-meta">
-                <strong>Jeu :</strong> Arène des Origines<br>
+                <strong>Application :</strong> Arène des Origines<br>
                 <strong>Éditeur :</strong> Benjamin Cohen<br>
                 <strong>Contact :</strong> <a href="mailto:binyamine555@gmail.com" style="color: var(--primary); text-decoration: none;">binyamine555@gmail.com</a><br>
                 <strong>Dernière mise à jour :</strong> Octobre 2026
@@ -728,7 +957,7 @@
             <ul>
                 <li><strong>Aucun compte n'est nécessaire</strong> pour jouer. L'éditeur ne reçoit aucun nom, aucune adresse e-mail, aucune donnée de jeu.</li>
                 <li>Les statistiques de jeu restent <strong>sur votre téléphone</strong> : elles ne sont jamais envoyées sur un serveur distant.</li>
-                <li>Deux services tiers peuvent être utilisés dans la version publiée, et seulement si vous les utilisez vous-même : <strong>Google Play / Apple Store In-App Purchases</strong> (achats intégrés de pièces) et <strong>Google AdMob</strong> (vidéo facultative contre des pièces). Ce sont eux, et non l'éditeur, qui traitent les données techniques correspondantes.</li>
+                <li>Deux services de Google/Apple peuvent être utilisés dans la version publiée, et seulement si vous les utilisez vous-même : <strong>Google Play Billing / Apple In-App Purchases</strong> (achats de pièces) et <strong>Google AdMob</strong> (vidéo facultative contre des pièces). Ce sont eux, et non l'éditeur, qui traitent les données techniques correspondantes.</li>
             </ul>
 
             <h3>2. Ce qui est enregistré sur votre téléphone (et uniquement dessus)</h3>
@@ -740,7 +969,7 @@
                 <li>Le nom de joueur que vous choisissez, si vous en saisissez un ;</li>
                 <li>L'historique de vos matchs multijoueur ;</li>
                 <li>Vos pièces, les objets de la boutique et vos défis ;</li>
-                <li><strong>Mesures anonymes :</strong> de simples compteurs locaux (nombre de sessions, de combats, écrans visités, étape du tutoriel atteinte, fluidité en combat...) et les dates de jeu. Elles ne contiennent ni nom, ni adresse, ni identifiant. Elles ne sont envoyées nulle part. Vous pouvez les consulter ou les réinitialiser dans Réglages > Mesures ;</li>
+                <li><strong>Des mesures anonymes :</strong> de simples compteurs locaux (nombre de sessions, de combats, écrans visités, étape du tutoriel atteinte, fluidité en combat...) et les dates de jeu. Elles ne contiennent ni nom, ni adresse, ni identifiant. Elles ne sont envoyées nulle part. Vous pouvez les consulter ou les réinitialiser dans Réglages > Mesures ;</li>
                 <li>Un journal technique des incidents, utilisé pour corriger les erreurs.</li>
             </ul>
             <p><em>Ces informations ne quittent jamais votre appareil. Désinstaller l'application les supprime définitivement.</em></p>
@@ -748,38 +977,112 @@
             <h3>3. Le mode multijoueur</h3>
             <p>Si — et seulement si — vous lancez une partie multijoueur :</p>
             <ul>
-                <li><strong>WiFi local :</strong> votre téléphone échange directement avec celui de l'autre joueur sur votre réseau local. Les deux appareils se voient mutuellement par leur adresse réseau locale, uniquement le temps de la partie. Rien n'est conservé.</li>
-                <li><strong>Jeu à distance :</strong> les deux téléphones tentent de se joindre directement via un serveur STUN public standard. Si la connexion directe échoue, les messages peuvent transiter par un serveur relais que vous configurez vous-même (aucun relais externe n'est activé par défaut).</li>
-                <li><strong>Aucun message écrit entre joueurs :</strong> l'application ne permet pas d'envoyer du texte libre ni de passer d'appels. Les échanges réseau ne transportent que l'état de la partie (positions, coups) et les invitations à jouer.</li>
+                <li><strong>WiFi local :</strong> votre téléphone échange directement avec celui de l'autre joueur, sur votre réseau local. Les deux appareils se voient mutuellement par leur adresse réseau locale, uniquement le temps de la partie. Rien n'est conservé.</li>
+                <li><strong>Jeu à distance :</strong> les deux téléphones tentent de se joindre directement. Pour y parvenir, ils demandent leur adresse publique à un serveur STUN public (service standard d'Internet). Si la connexion directe échoue, les messages peuvent transiter par un serveur relais que vous configurez vous-même ; par défaut, aucun relais n'est configuré.</li>
+                <li><strong>Aucun message écrit entre joueurs :</strong> l'application ne permet pas d'envoyer de texte libre ni de passer d'appels. Les échanges réseau ne transportent que l'état de la partie (positions, coups) et les invitations à jouer.</li>
                 <li><strong>Identité de joueur :</strong> l'application fabrique sur votre téléphone une paire de clés cryptographiques qui sert à signer vos résultats de match. La clé privée ne quitte jamais l'appareil.</li>
             </ul>
 
             <h3>4. Achats et publicité</h3>
             <ul>
-                <li><strong>Achats :</strong> les achats de pièces passent par les systèmes de facturation sécurisés officiels (Google Play Billing / Apple In-App Purchase). Le paiement est traité directement par Google ou Apple ; l'éditeur ne voit jamais votre moyen de paiement. L'application reçoit seulement la confirmation de l'achat. Rien de ce qui est vendu ne rend un combattant artificiellement plus fort (objets cosmétiques et progression).</li>
-                <li><strong>Vidéo facultative :</strong> vous pouvez regarder une vidéo publicitaire pour gagner des pièces. Elle est fournie par Google AdMob, qui peut utiliser l'identifiant publicitaire de votre appareil selon ses propres règles (<a href="https://policies.google.com/privacy" target="_blank" style="color: var(--primary);">politique Google</a>). Dans l'Espace économique européen, un message de consentement conforme RGPD est proposé. Aucune publicité n'est jamais affichée pendant un combat.</li>
+                <li><strong>Achats :</strong> les achats de pièces passent par les systèmes de facturation sécurisés officiels (Google Play Billing / Apple In-App Purchases). Le paiement est traité directement par Google ou Apple ; l'éditeur ne voit jamais votre moyen de paiement. L'application reçoit seulement la confirmation de l'achat. Rien de ce qui est vendu ne rend un combattant artificiellement plus fort (objets cosmétiques et progression).</li>
+                <li><strong>Vidéo facultative :</strong> vous pouvez regarder une vidéo publicitaire pour gagner des pièces. Elle est fournie par Google AdMob, qui peut utiliser l'identifiant publicitaire de votre appareil selon ses propres règles (<a href="https://policies.google.com/privacy" target="_blank" style="color: var(--primary);">politique Google</a>). Dans l'Espace économique européen, un message de consentement conforme RGPD est proposé avant toute publicité. Aucune publicité n'est jamais affichée pendant un combat.</li>
             </ul>
 
             <h3>5. Protection des enfants</h3>
-            <p>Le jeu est un jeu de combat de style cartoon, sans sang, sans texte saisi librement et sans lien externe non supervisé. L'éditeur ne collecte aucune donnée personnelle, donc aucune donnée relative aux mineurs.</p>
+            <p>Le jeu est un jeu de combat de style cartoon, sans sang, sans texte saisi librement et sans lien vers l'extérieur. L'éditeur ne collecte aucune donnée, donc aucune donnée d'enfant.</p>
 
             <h3>6. Vos droits</h3>
-            <p>L'éditeur ne conserve aucune donnée nominative vous concernant sur ses serveurs : il n'y a donc rien à consulter, corriger ou supprimer chez lui. Les données locales se suppriment simplement en désinstallant l'application ou en effaçant les données de l'application dans les réglages de votre téléphone.</p>
+            <p>L'éditeur ne conserve aucune donnée vous concernant sur ses serveurs : il n'y a rien à consulter, corriger ou supprimer chez lui. Pour les achats et la vidéo, adressez-vous à Google ou Apple. Les données locales se suppriment en désinstallant l'application ou depuis Paramètres > Applications > Arène des Origines > Stockage > Effacer les données.</p>
 
             <h3>7. Contact & Support</h3>
-            <p>Pour toute question concernant cette politique ou l'application, vous pouvez contacter directement l'éditeur par e-mail :<br>
+            <p>Pour toute question concernant cette politique ou l'application, contactez directement l'éditeur :<br>
             👉 <a href="mailto:binyamine555@gmail.com" style="color: var(--primary); text-decoration: none; font-weight: 700;">binyamine555@gmail.com</a></p>
         </div>
     </section>
 
     <!-- PIED DE PAGE -->
     <footer>
-        <div>© 2026 <strong>Arène des Origines</strong>. Tous droits réservés.</div>
+        <div>© 2026 <strong>Arène des Origines</strong>. Développé en solo par Benjamin Cohen.</div>
         <div class="footer-links">
             <a href="#confidentialite">Politique de Confidentialité</a>
             <a href="mailto:binyamine555@gmail.com">Contact : binyamine555@gmail.com</a>
         </div>
     </footer>
 
+    <!-- SYNTHÉTISEUR AUDIO WEB : ARE YOU READY TO FIGHT ? -->
+    <script>
+        let audioCtx = null;
+        let isPlaying = false;
+        let loopInterval = null;
+
+        function playWarGong() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            const now = audioCtx.currentTime;
+
+            // 1. Coup de Gong d'arène (Basse profonde)
+            const oscBass = audioCtx.createOscillator();
+            const gainBass = audioCtx.createGain();
+            oscBass.type = 'sine';
+            oscBass.frequency.setValueAtTime(110, now);
+            oscBass.frequency.exponentialRampToValueAtTime(45, now + 1.8);
+            gainBass.gain.setValueAtTime(0.7, now);
+            gainBass.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
+            oscBass.connect(gainBass);
+            gainBass.connect(audioCtx.destination);
+            oscBass.start(now);
+            oscBass.stop(now + 2.0);
+
+            // 2. Choc de métal d'armure / épée
+            const oscMetal = audioCtx.createOscillator();
+            const gainMetal = audioCtx.createGain();
+            oscMetal.type = 'triangle';
+            oscMetal.frequency.setValueAtTime(440, now);
+            oscMetal.frequency.exponentialRampToValueAtTime(180, now + 0.6);
+            gainMetal.gain.setValueAtTime(0.35, now);
+            gainMetal.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+            oscMetal.connect(gainMetal);
+            gainMetal.connect(audioCtx.destination);
+            oscMetal.start(now);
+            oscMetal.stop(now + 0.8);
+
+            // 3. Voix solennelle "Are you ready to fight?"
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance("Are you ready to fight ?");
+                utterance.lang = 'en-US';
+                utterance.pitch = 0.65; // Voix grave et imposante
+                utterance.rate = 0.85;  // Rythme lent et théâtral
+                utterance.volume = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function toggleAudio() {
+            const btn = document.getElementById('audioBtn');
+            if (!isPlaying) {
+                isPlaying = true;
+                btn.innerHTML = '🔊 Arène Active';
+                btn.style.background = 'var(--primary)';
+                btn.style.color = '#000';
+                playWarGong();
+                // Répétition de la pulsation d'arène toutes les 10 secondes
+                loopInterval = setInterval(playWarGong, 10000);
+            } else {
+                isPlaying = false;
+                btn.innerHTML = '🔇 Musique Coupée';
+                btn.style.background = 'rgba(245, 158, 11, 0.15)';
+                btn.style.color = 'var(--primary)';
+                if (loopInterval) clearInterval(loopInterval);
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            }
+        }
+    </script>
 </body>
 </html>
