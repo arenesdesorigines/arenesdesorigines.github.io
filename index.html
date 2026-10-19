@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arène des Origines - Site Officiel & Confidentialité</title>
+    <title>Arène des Origines - Site Officiel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
@@ -45,7 +45,6 @@
             letter-spacing: 1px;
         }
 
-        /* HEADER */
         header {
             position: fixed;
             top: 0;
@@ -126,8 +125,7 @@
             gap: 3rem;
             position: relative;
             background: 
-                linear-gradient(180deg, rgba(7, 8, 13, 0.72) 0%, rgba(7, 8, 13, 0.82) 55%, rgba(7, 8, 13, 1) 100%),
-                radial-gradient(circle at 50% 40%, rgba(99, 102, 241, 0.25) 0%, transparent 60%),
+                linear-gradient(180deg, rgba(7, 8, 13, 0.65) 0%, rgba(7, 8, 13, 0.82) 60%, rgba(7, 8, 13, 1) 100%),
                 url("ecran_demarrage_1280x720.png");
             background-size: cover;
             background-position: center bottom;
@@ -252,7 +250,7 @@
             transform: translateY(-3px);
         }
 
-        /* HERO VISUAL */
+        /* HERO STAGE */
         .hero-visual {
             position: relative;
             display: flex;
@@ -296,8 +294,8 @@
         .hero-avatar-wrapper {
             position: relative;
             z-index: 3;
-            width: 200px;
-            height: 250px;
+            width: 220px;
+            height: 260px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -306,7 +304,7 @@
 
         @keyframes heroIdle {
             0%, 100% { transform: scale(1) translateY(0); filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8)); }
-            50% { transform: scale(1.03) translateY(-10px); filter: drop-shadow(0 25px 35px var(--primary-glow)); }
+            50% { transform: scale(1.04) translateY(-8px); filter: drop-shadow(0 25px 35px var(--primary-glow)); }
         }
 
         .stage-caption {
@@ -381,7 +379,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle at center, rgba(30, 36, 58, 0.9) 0%, rgba(8, 10, 16, 0.95) 75%);
+            background: 
+                radial-gradient(circle at center, rgba(30, 36, 58, 0.55) 0%, rgba(8, 10, 16, 0.95) 85%),
+                url("ecran_demarrage_1280x720.png");
+            background-size: cover;
+            background-position: center bottom;
             border-radius: 18px;
             margin-bottom: 1.5rem;
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -390,12 +392,12 @@
 
         .arena-stone-ring {
             position: absolute;
-            bottom: 20px;
+            bottom: 18px;
             width: 210px;
-            height: 70px;
+            height: 65px;
             border-radius: 50%;
-            border: 2px dashed rgba(245, 158, 11, 0.5);
-            background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.35) 0%, rgba(99, 102, 241, 0.15) 55%, transparent 75%);
+            border: 2px dashed rgba(245, 158, 11, 0.55);
+            background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.3) 0%, rgba(99, 102, 241, 0.15) 55%, transparent 75%);
             transform: rotateX(65deg);
             animation: rotatePedestal 22s linear infinite;
         }
@@ -408,24 +410,25 @@
         .char-visual {
             position: relative;
             z-index: 3;
-            width: 140px;
-            height: 180px;
+            width: 170px;
+            height: 195px;
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: charBreathing 3.6s ease-in-out infinite;
+            animation: charBreathing 3.4s ease-in-out infinite;
         }
 
         .char-visual img {
-            max-width: 100%;
-            max-height: 100%;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
-            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.9));
+            image-rendering: pixelated;
+            filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.95));
         }
 
         @keyframes charBreathing {
-            0%, 100% { transform: scale(1) translateY(0); filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.9)); }
-            50% { transform: scale(1.04) translateY(-6px); filter: drop-shadow(0 15px 22px rgba(245, 158, 11, 0.4)); }
+            0%, 100% { transform: scale(1) translateY(0); }
+            50% { transform: scale(1.05) translateY(-6px); }
         }
 
         .char-title {
@@ -471,7 +474,7 @@
         .attack-item {
             font-size: 0.95rem;
             color: #cbd5e1;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.55rem;
             display: flex;
             align-items: flex-start;
             gap: 8px;
@@ -707,7 +710,6 @@
             border-left: 4px solid var(--primary);
         }
 
-        /* FOOTER */
         footer {
             padding: 3rem 7%;
             border-top: 1px solid var(--card-border);
@@ -740,7 +742,7 @@
             .hero-content {
                 margin-bottom: 2.5rem;
             }
-            .download-buttons {
+            .download-buttons, .secondary-actions {
                 justify-content: center;
             }
             .hero h1 {
@@ -760,8 +762,9 @@
 </head>
 <body>
 
-    <!-- LECTEUR AUDIO POUR LA VRAIE MUSIQUE (Custom_Blade) -->
+    <!-- LECTEUR AUDIO OFFICIEL (Lit Custom_Blade (1).mp4 ou musique.mp3) -->
     <audio id="bgMusic" loop preload="auto">
+        <source src="Custom_Blade%20(1).mp4" type="video/mp4">
         <source src="Custom_Blade (1).mp4" type="audio/mp4">
         <source src="musique.mp3" type="audio/mpeg">
     </audio>
@@ -770,14 +773,14 @@
     <header>
         <a href="#" class="logo">⚔️ <span>Arène</span> des Origines</a>
         <nav>
-            <a href="#personnages">Les 10 Héros</a>
-            <a href="#tips">Tips & Astuces</a>
+            <a href="#personnages">Les 10 Combattants</a>
+            <a href="#tips">Tips & Stratégies</a>
             <a href="#soutenir">Soutenir</a>
             <a href="#amelioration">Suggestions</a>
             <a href="#confidentialite">Confidentialité</a>
         </nav>
         <button id="audioBtn" class="audio-toggle-btn" onclick="toggleAudio()">
-            🔊 Activer la Musique
+            🔊 Musique : Are You Ready to Fight ?
         </button>
     </header>
 
@@ -789,10 +792,9 @@
                 <span class="badge badge-google">⚡ Google Play & App Store</span>
             </div>
             <h1>Battez-vous dans l'Arène des Origines</h1>
-            <p>Le jeu de combat et de stratégie tactique mobile développé en solo et en toute indépendance. Choisissez votre champion parmi les 10 guerriers de légende, maîtrisez leurs combos et dominez l'arène !</p>
+            <p>Le jeu de combat et de stratégie tactique mobile développé en solo et en toute indépendance. Choisissez votre champion parmi les 10 guerriers de la Tour, maîtrisez leurs attaques spéciales et gravissez les 100 étages !</p>
             
             <div class="download-buttons">
-                <!-- BADGE GOOGLE PLAY -->
                 <a href="#amelioration" class="store-btn">
                     <svg viewBox="0 0 24 24">
                         <path fill="#4285F4" d="M3.6 2.4L13.8 12.6 3.6 22.8C3.2 22.4 3 21.8 3 21V4.2C3 3.4 3.2 2.8 3.6 2.4z"/>
@@ -806,7 +808,6 @@
                     </div>
                 </a>
 
-                <!-- BADGE APPLE APP STORE -->
                 <a href="#amelioration" class="store-btn">
                     <svg viewBox="0 0 170 170" fill="#fff">
                         <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.05-7.62-7.85-11.77-14.44-6-9.58-10.74-20.24-14.22-31.98-3.48-11.74-5.22-23.07-5.22-33.99 0-14.36 3.75-26.4 11.23-36.14 7.48-9.74 16.92-14.74 28.34-15.01 4.7 0 10.02 1.34 15.98 4.02 5.95 2.68 9.77 4.08 11.45 4.19 1.57-.11 5.5-1.57 11.78-4.37 6.29-2.8 11.73-4.09 16.33-3.87 13.88.67 24.8 5.48 32.74 14.44-12.08 7.37-17.98 17.52-17.69 30.45.29 10.18 4.3 18.66 12.03 25.43 7.73 6.77 17.06 10.63 27.98 11.58-2.35 7.04-5.31 14.25-8.87 21.63zM119.22 31.84c0-7.39 2.66-14.42 7.99-21.09 5.32-6.68 11.95-10.75 19.87-12.22.45 1.56.67 3.02.67 4.37 0 7.39-2.73 14.53-8.2 21.43-5.46 6.9-12.15 10.9-20.06 12.01-.11-1.34-.27-2.84-.27-4.5z"/>
@@ -817,17 +818,22 @@
                     </div>
                 </a>
             </div>
+
+            <div class="secondary-actions">
+                <a href="#personnages" class="btn-secondary">⚔️ Découvrir les 10 Combattants</a>
+                <a href="#soutenir" class="btn-secondary">☕ Soutenir le Créateur</a>
+            </div>
         </div>
 
         <div class="hero-visual">
             <div class="arena-main-stage">
                 <div class="stage-caption">
                     <p>Plateforme des Origines</p>
-                    <h3>L'Arène Centrale</h3>
+                    <h3>Ragnar dans l'Arène</h3>
                 </div>
                 
                 <div class="hero-avatar-wrapper">
-                    <img src="icone_512.png" alt="Arène des Origines" style="width: 100%; height: 100%; object-fit: contain; border-radius: 20px;">
+                    <img src="ragnar.png" onerror="this.src='icone_512.png'" alt="Ragnar Berserker" style="width: 100%; height: 100%; object-fit: contain; border-radius: 20px;">
                 </div>
 
                 <div class="arena-glow-disk"></div>
@@ -835,11 +841,11 @@
         </div>
     </section>
 
-    <!-- SECTION DES 10 COMBATTANTS OFFICIELS -->
+    <!-- SECTION DES 10 COMBATTANTS OFFICIELS AVEC DESCRIPTIONS COMPLÈTES -->
     <section id="personnages">
         <div class="section-header">
-            <h2>Les 10 Héros de l'Arène</h2>
-            <p>10 styles de combat uniques extraits directement du code source du jeu, avec leurs attaques spéciales et maîtrises respectives.</p>
+            <h2>Les 10 Combattants de l'Arène</h2>
+            <p>Chaque guerrier est représenté seul dans son arène. Découvrez son histoire, ses forces et le détail complet de ses attaques spéciales.</p>
         </div>
 
         <div class="characters-grid">
@@ -849,17 +855,17 @@
                 <div class="char-arena-scene">
                     <div class="arena-stone-ring"></div>
                     <div class="char-visual">
-                        <img src="icone_512.png" alt="Brutus" onerror="this.src='https://placehold.co/150x180/1e293b/f59e0b?text=Brutus'">
+                        <img src="brutus.png" alt="Brutus le Colosse Blindé">
                     </div>
                 </div>
-                <h3 class="char-title">1. Brutus</h3>
-                <div class="char-role">Colosse Blindé & Encaissement</div>
-                <p class="char-desc">Colosse blindé impénétrable. Il encaisse tous les coups de plein fouet et avance inlassablement vers ses rivaux sans reculer.</p>
+                <h3 class="char-title">Brutus le Colosse Blindé</h3>
+                <div class="char-role">Armure Lourde & Encaissement Absolu</div>
+                <p class="char-desc">Gardien du premier seuil de la Tour équipé d'une armure de plaques et de gantelets d'acier. Il encaisse les assauts les plus violents sans fléchir et avance inexorablement pour broyer la garde adverse.</p>
                 <div class="attacks-list">
-                    <h4>⚔️ Attaques & Capacités :</h4>
-                    <div class="attack-item"><span>🛡️</span> <div><strong>Charge Frontale (Charge Head) :</strong> encaisse et fonce tête baissée.</div></div>
-                    <div class="attack-item"><span>💥</span> <div><strong>Bouclier Écrasant (Shield Bash) :</strong> repousse l'ennemi.</div></div>
-                    <div class="attack-item"><span>⚡</span> <div><strong>Uppercut & Quake :</strong> ébranle le sol de l'arène.</div></div>
+                    <h4>⚔️ Détail des Attaques :</h4>
+                    <div class="attack-item"><span>🛡️</span> <div><strong>Charge Frontale (Charge Head) :</strong> Fonce tête baissée à travers les coups ennemis pour percuter la cible de plein fouet.</div></div>
+                    <div class="attack-item"><span>💥</span> <div><strong>Coup de Bouclier (Shield Bash) :</strong> Impact blindé latéral qui brise la posture adverse et repousse violemment.</div></div>
+                    <div class="attack-item"><span>👊</span> <div><strong>Uppercut & Séisme (Quake) :</strong> Crochet ascendant dévastateur suivi d'une frappe au sol faisant trembler toute la dalle.</div></div>
                 </div>
             </div>
 
@@ -868,52 +874,55 @@
                 <div class="char-arena-scene">
                     <div class="arena-stone-ring"></div>
                     <div class="char-visual">
-                        <img src="icone_512.png" alt="Zephyr" onerror="this.src='https://placehold.co/150x180/082f49/0ea5e9?text=Zephyr'">
+                        <img src="zephyr.png" alt="Zephyr le Maître du Vent">
                     </div>
                 </div>
-                <h3 class="char-title">2. Zephyr</h3>
-                <div class="char-role">Silhouette Fine & Triple Saut</div>
-                <p class="char-desc">Combattant aérien ultra agile doté d'un triple saut. Fragile mais totalement insaisissable en mouvement.</p>
+                <h3 class="char-title">Zephyr l'Insaisissable</h3>
+                <div class="char-role">Silhouette Fine, Vitesse & Triple Saut</div>
+                <p class="char-desc">Combattant aérien aux longs cheveux argentés et aux bandages de combat. Doté d'un triple saut unique dans le jeu, il compense sa fragilité par une mobilité aérienne qui le rend impossible à attraper.</p>
                 <div class="attacks-list">
-                    <h4>⚔️ Attaques & Capacités :</h4>
-                    <div class="attack-item"><span>🌀</span> <div><strong>Spin & Flurry :</strong> enchaînement tournoyant rapide.</div></div>
-                    <div class="attack-item"><span>🌪️</span> <div><strong>Air Slash & Vortex :</strong> lames d'air et tempêtes localisées.</div></div>
+                    <h4>⚔️ Détail des Attaques :</h4>
+                    <div class="attack-item"><span>🌀</span> <div><strong>Tourbillon & Déluge (Spin / Flurry) :</strong> Série de frappes tournoyantes ultra rapides qui piègent l'ennemi dans un combo continu.</div></div>
+                    <div class="attack-item"><span>💨</span> <div><strong>Lame d'Air (Air Slash) :</strong> Entaille tranchante projetant une onde de vent à mi-distance.</div></div>
+                    <div class="attack-item"><span>🌪️</span> <div><strong>Ascension Céleste & Vortex (Sky Launch) :</strong> Propulse l'adversaire dans les airs avant de déclencher un vortex aspirant.</div></div>
                 </div>
             </div>
 
-            <!-- 3. KALDRIN (MAGE DE FEU) -->
+            <!-- 3. KALDRIN -->
             <div class="char-card">
                 <div class="char-arena-scene">
                     <div class="arena-stone-ring"></div>
                     <div class="char-visual">
-                        <img src="icone_512.png" alt="Kaldrin" onerror="this.src='https://placehold.co/150x180/450a0a/ef4444?text=Kaldrin'">
+                        <img src="kaldrin.png" alt="Kaldrin le Mage de Feu">
                     </div>
                 </div>
-                <h3 class="char-title">3. Kaldrin</h3>
-                <div class="char-role">Mage de Feu & Longue Portée</div>
-                <p class="char-desc">Spécialiste des arcanes pyromanciennes. Attaque à distance avec une puissance dévastatrice, mais vulnérable au corps à corps.</p>
+                <h3 class="char-title">Kaldrin le Mage de Feu</h3>
+                <div class="char-role">Magie Pyromancienne & Contrôle à Distance</div>
+                <p class="char-desc">Maître de la pyromancie et des arcanes de lave. Il maintient ses rivaux à distance grâce à un barrage constant de flammes et de magma, bien que son corps reste vulnérable au corps à corps.</p>
                 <div class="attacks-list">
-                    <h4>⚔️ Attaques & Capacités :</h4>
-                    <div class="attack-item"><span>🔥</span> <div><strong>Projectile & Vague de flammes (Flame Wave) :</strong> sorts continus.</div></div>
-                    <div class="attack-item"><span>🌋</span> <div><strong>Jet Ardent & Bassin de Lave (Lava Pool) :</strong> embrase le sol.</div></div>
+                    <h4>⚔️ Détail des Attaques :</h4>
+                    <div class="attack-item"><span>🔥</span> <div><strong>Boule de Feu (Projectile) :</strong> Projectile brûlant rapide qui impose une pression constante d'un bout à l'autre de l'écran.</div></div>
+                    <div class="attack-item"><span>🌊</span> <div><strong>Vague de Flammes (Flame Wave) :</strong> Raz-de-marée incandescent balayant l'arène et repoussant les assaillants.</div></div>
+                    <div class="attack-item"><span>🌋</span> <div><strong>Jet Ardent & Bassin de Lave (Fire Jet / Lava Pool) :</strong> Propulsion de flammes et flaque de magma au sol infligeant des dégâts continus.</div></div>
                 </div>
             </div>
 
-            <!-- 4. NIVRAN (GARDE DE GLACE) -->
+            <!-- 4. NIVRAN -->
             <div class="char-card">
                 <div class="char-arena-scene">
                     <div class="arena-stone-ring"></div>
                     <div class="char-visual">
-                        <img src="icone_512.png" alt="Nivran" onerror="this.src='https://placehold.co/150x180/0f172a/38bdf8?text=Nivran'">
+                        <img src="nivran.png" alt="Nivran le Garde de Glace">
                     </div>
                 </div>
-                <h3 class="char-title">4. Nivran</h3>
-                <div class="char-role">Garde de Glace & Contrôle de Terrain</div>
-                <p class="char-desc">Guerrier givré capable de geler ses opposants sur place et de ériger des barrières de glace pour verrouiller l'arène.</p>
+                <h3 class="char-title">Nivran le Garde de Glace</h3>
+                <div class="char-role">Armure de Givre, Gel & Contrôle du Terrain</div>
+                <p class="char-desc">Sentinelle d'élite dont l'ordre veille sur la mémoire de la Tour depuis onze générations. Il ralentit le rythme du combat, gèle ses adversaires sur place et verrouille l'espace avec ses murs de glace.</p>
                 <div class="attacks-list">
-                    <h4>⚔️ Attaques & Capacités :</h4>
-                    <div class="attack-item"><span>❄️</span> <div><strong>Gelure (Freeze) & Mur de Glace (Ice Wall) :</strong> paralyse et bloque.</div></div>
-                    <div class="attack-item"><span>🧊</span> <div><strong>Pilier de Givre & Contre :</strong> piège et riposte glaciale.</div></div>
+                    <h4>⚔️ Détail des Attaques :</h4>
+                    <div class="attack-item"><span>❄️</span> <div><strong>Éclat & Gelure (Shard / Freeze) :</strong> Attaque glaciale qui immobilise totalement l'adversaire dans un bloc de givre.</div></div>
+                    <div class="attack-item"><span>🧊</span> <div><strong>Mur de Glace (Ice Wall) :</strong> Érige un rempart cristallin bloquant les projectiles et les charges ennemies.</div></div>
+                    <div class="attack-item"><span>🛡️</span> <div><strong>Jaillissement Givré & Contre (Frost Rise / Counter) :</strong> Posture de parade punissant instantanément toute attaque directe.</div></div>
                 </div>
             </div>
 
@@ -922,16 +931,17 @@
                 <div class="char-arena-scene">
                     <div class="arena-stone-ring"></div>
                     <div class="char-visual">
-                        <img src="icone_512.png" alt="Volt" onerror="this.src='https://placehold.co/150x180/713f12/facc15?text=Volt'">
+                        <img src="volt.png" alt="Volt l'Éclair Foudroyant">
                     </div>
                 </div>
-                <h3 class="char-title">5. Volt</h3>
-                <div class="char-role">Combos Électriques Ultra Rapides</div>
-                <p class="char-desc">Maître de la foudre. Inflige peu de dégâts par frappe isolée, mais compense par une vitesse d'enchaînement étourdissante.</p>
+                <h3 class="char-title">Volt le Foudroyant</h3>
+                <div class="char-role">Combos Électriques & Vitesse Pure</div>
+                <p class="char-desc">Combattant survolté entouré d'arcs électriques. Ses coups individuels infligent des dégâts légers, mais sa cadence de frappe fulgurante lui permet d'enchaîner des combos impossibles à interrompre.</p>
                 <div class="attacks-list">
-                    <h4>⚔️ Attaques & Capacités :</h4>
-                    <div class="attack-item"><span>⚡</span> <div><strong>Perforation & Foudre Céleste :</strong> frappes fulgurantes.</div></div>
-                    <div class="attack-item"><span>🔋</span> <div><strong>Saut Électrique & Mines d'orage :</strong> pièges sous tension.</div></div>
+                    <h4>⚔️ Détail des Attaques :</h4>
+                    <div class="attack-item"><span>⚡</span> <div><strong>Perforation Éclair (Pierce) :</strong> Estocade électrique traversant la distance en un clin d'œil.</div></div>
+                    <div class="attack-item"><span>🌩️</span> <div><strong>Tonnerre & Saut Électrique (Thunder / Zap Jump) :</strong> Décharge foudroyante accompagnée d'un bond sous haute tension.</div></div>
+                    <div class="attack-item"><span>💣</span> <div><strong>Mine d'Orage (Mine) :</strong> Pose une sphère électrique instable qui explose au passage de l'ennemi.</div></div>
                 </div>
             </div>
 
@@ -940,16 +950,17 @@
                 <div class="char-arena-scene">
                     <div class="arena-stone-ring"></div>
                     <div class="char-visual">
-                        <img src="icone_512.png" alt="Terra" onerror="this.src='https://placehold.co/150x180/27272a/a1a1aa?text=Terra'">
+                        <img src="terra.png" alt="Terra le Défenseur de Pierre">
                     </div>
                 </div>
-                <h3 class="char-title">6. Terra</h3>
-                <div class="char-role">Défenseur Tellurique & Rochers</div>
-                <p class="char-desc">Gardien de la pierre. Solide comme un roc, il fait jaillir des pics rocheux et projette des blocs de terre sur ses rivaux.</p>
+                <h3 class="char-title">Terra le Défenseur de Pierre</h3>
+                <div class="char-role">Forteresse Tellurique & Projections</div>
+                <p class="char-desc">Guerrier massif revêtu d'une armure de roche ancienne recouverte de mousse. Aussi inébranlable qu'une montagne, il frappe le sol de l'arène pour faire surgir des piliers de pierre et projeter ses ennemis.</p>
                 <div class="attacks-list">
-                    <h4>⚔️ Attaques & Capacités :</h4>
-                    <div class="attack-item"><span>🪨</span> <div><strong>Pointe & Lancer de Rocher (Rock Throw) :</strong> artillerie lourde.</div></div>
-                    <div class="attack-item"><span>🏛️</span> <div><strong>Pilier & Prise de Roche :</strong> contrôle vertical du terrain.</div></div>
+                    <h4>⚔️ Détail des Attaques :</h4>
+                    <div class="attack-item"><span>🪨</span> <div><strong>Lancer de Rocher (Rock Throw) :</strong> Arrache un bloc de pierre massif du sol et le catapulte à distance.</div></div>
+                    <div class="attack-item"><span>⛰️</span> <div><strong>Pointe & Pilier Tellurique (Spike / Pillar) :</strong> Fait jaillir un pic rocheux sous les pieds de l'adversaire pour l'envoyer en l'air.</div></div>
+                    <div class="attack-item"><span>🤝</span> <div><strong>Prise de Granit (Grab) :</strong> Saisit l'adversaire au corps à corps à travers sa garde pour l'écraser au sol.</div></div>
                 </div>
             </div>
 
@@ -958,16 +969,17 @@
                 <div class="char-arena-scene">
                     <div class="arena-stone-ring"></div>
                     <div class="char-visual">
-                        <img src="icone_512.png" alt="Shadow" onerror="this.src='https://placehold.co/150x180/18181b/c084fc?text=Shadow'">
+                        <img src="shadow.png" alt="Shadow l'Assassin Encapuchonné">
                     </div>
                 </div>
-                <h3 class="char-title">7. Shadow</h3>
-                <div class="char-role">Assassin Encapuchonné & Vitesse</div>
-                <p class="char-desc">Ombre furtive des étages supérieurs. Dash rapide, frappes furtives et évanouissement instantané dans le décors.</p>
+                <h3 class="char-title">Shadow l'Assassin</h3>
+                <div class="char-role">Furtivité, Téléportation & Lames d'Ombre</div>
+                <p class="char-desc">Assassin encapuchonné et masqué gardant les hauteurs du Sanctuaire. Maître des feintes, il exécute un dash rapide, frappe aux points vitaux et disparaît dans les ombres avant toute riposte.</p>
                 <div class="attacks-list">
-                    <h4>⚔️ Attaques & Capacités :</h4>
-                    <div class="attack-item"><span>👥</span> <div><strong>Dash Fantôme & Boomerang :</strong> frappes furtives et retour de lame.</div></div>
-                    <div class="attack-item"><span>🌑</span> <div><strong>Shadow Rise & Low Sweep :</strong> balayages et ascensions sournoises.</div></div>
+                    <h4>⚔️ Détail des Attaques :</h4>
+                    <div class="attack-item"><span>👤</span> <div><strong>Dash Fantôme (Phantom) :</strong> Ruée spectrale instantanée vers l'avant rendant invulnérable pendant la traversée.</div></div>
+                    <div class="attack-item"><span>🗡️</span> <div><strong>Boomerang de Dagues (Boomerang) :</strong> Lancer de lame courbe qui revient frapper l'ennemi dans le dos.</div></div>
+                    <div class="attack-item"><span>🌑</span> <div><strong>Balayage Bas & Ascension d'Ombre (Low Sweep / Shadow Rise) :</strong> Fauche les appuis au sol avant de ressurgir dans les airs.</div></div>
                 </div>
             </div>
 
@@ -976,15 +988,17 @@
                 <div class="char-arena-scene">
                     <div class="arena-stone-ring"></div>
                     <div class="char-visual">
-                        <img src="icone_512.png" alt="Ragnar" onerror="this.src='https://placehold.co/150x180/451a03/f59e0b?text=Ragnar'">
+                        <img src="ragnar.png" alt="Ragnar le Berserker à la Hache">
                     </div>
                 </div>
-                <h3 class="char-title">8. Ragnar</h3>
-                <div class="char-role">Berserker à la Hache & Puissance</div>
-                <p class="char-desc">Le guerrier nordique le plus lourd et le plus redoutable de la Tour. Sa hache fend l'air et détruit les défenses adverses.</p>
+                <h3 class="char-title">Ragnar le Berserker</h3>
+                <div class="char-role">Puissance Brute & Hache Lourde</div>
+                <p class="char-desc">Le combattant le plus lourd et le plus dévastateur de l'Arène. Vêtu d'une cape de fourrure nordique et maniant une lourde hache de guerre, chaque coup de Ragnar brise l'armure et l'élan de ses rivaux.</p>
                 <div class="attacks-list">
-                    <h4>⚔️ Attaques & Capacités :</h4>
-                    <div class="attack-item"><span>🪓</span> <div><strong>Axe Throw & Rising Slash :</strong> lancer et entaille ascendante violente.</div></div>
+                    <h4>⚔️ Détail des Attaques :</h4>
+                    <div class="attack-item"><span>💥</span> <div><strong>Lancer de Hache (Axe Throw) :</strong> Projette sa lourde hache en ligne droite pour transpercer la garde et étourdir à mi-distance.</div></div>
+                    <div class="attack-item"><span>⚡</span> <div><strong>Entaille Montante (Rising Slash) :</strong> Balayage vertical brutal à la hache qui fait décoller l'ennemi du sol.</div></div>
+                    <div class="attack-item"><span>🪓</span> <div><strong>Fureur Nordique :</strong> Frappe chargée au corps à corps infligeant les plus lourds dégâts d'impact du jeu.</div></div>
                 </div>
             </div>
 
@@ -993,15 +1007,17 @@
                 <div class="char-arena-scene">
                     <div class="arena-stone-ring"></div>
                     <div class="char-visual">
-                        <img src="icone_512.png" alt="Drak" onerror="this.src='https://placehold.co/150x180/1e293b/38bdf8?text=Drak'">
+                        <img src="drak.png" alt="Drak le Guerrier Masqué">
                     </div>
                 </div>
-                <h3 class="char-title">9. Drak</h3>
-                <div class="char-role">Guerrier Masqué & Projections</div>
-                <p class="char-desc">Combattant au masque d'os mystérieux. Spécialiste du smash au sol et des coups de pied plongeants propulsant très loin.</p>
+                <h3 class="char-title">Drak le Guerrier au Crâne</h3>
+                <div class="char-role">Masque d'Os, Smash & Projection</div>
+                <p class="char-desc">Guerrier redoutable vêtu d'une armure squelettique et d'un masque de crâne, armé d'une hache et d'une masse à pointes. Son smash au sol déploie une onde de choc qui projette ses adversaires très loin.</p>
                 <div class="attacks-list">
-                    <h4>⚔️ Attaques & Capacités :</h4>
-                    <div class="attack-item"><span>💥</span> <div><strong>Smash au sol & Dive Kick :</strong> ondes de choc et plongeon aérien.</div></div>
+                    <h4>⚔️ Détail des Attaques :</h4>
+                    <div class="attack-item"><span>💀</span> <div><strong>Smash au Sol :</strong> Frappe violemment la dalle avec ses armes pour éjecter l'adversaire hors du centre de l'arène.</div></div>
+                    <div class="attack-item"><span>🥋</span> <div><strong>Plongeon Aérien (Dive Kick) :</strong> Attaque sautée en piqué à grande vitesse, idéale pour passer au-dessus des tirs et casser la garde.</div></div>
+                    <div class="attack-item"><span>💫</span> <div><strong>Dispersion d'Os (Scatter) :</strong> Onde de choc circulaire repoussant simultanément les ennemis proches.</div></div>
                 </div>
             </div>
 
@@ -1010,59 +1026,61 @@
                 <div class="char-arena-scene">
                     <div class="arena-stone-ring"></div>
                     <div class="char-visual">
-                        <img src="icone_512.png" alt="Nova" onerror="this.src='https://placehold.co/150x180/3b0764/a855f7?text=Nova'">
+                        <img src="nova.png" alt="Nova le Maître de la Magie Pure">
                     </div>
                 </div>
-                <h3 class="char-title">10. Nova</h3>
-                <div class="char-role">Magie Pure & Portée Maximale</div>
-                <p class="char-desc">Maître de la magie des arcanes. Dispose de la plus longue portée de tir de tout le jeu, idéale pour dominer à distance.</p>
+                <h3 class="char-title">Nova l'Archimage</h3>
+                <div class="char-role">Magie Pure, Orbe Astral & Portée Maximale</div>
+                <p class="char-desc">Érudit mystique en robe blanche et dorée contrôlant un orbe d'énergie pure en lévitation. Il possède la plus longue portée d'attaque de tout le jeu, mais doit éviter le corps à corps en raison de sa constitution fragile.</p>
                 <div class="attacks-list">
-                    <h4>⚔️ Attaques & Capacités :</h4>
-                    <div class="attack-item"><span>✨</span> <div><strong>Arc Shot, Rayon & Distorsion (Warp) :</strong> artillerie mystique pure.</div></div>
+                    <h4>⚔️ Détail des Attaques :</h4>
+                    <div class="attack-item"><span>🔮</span> <div><strong>Tir Arcanique (Arc Shot) :</strong> Salve d'énergie pure à très longue portée qui contrôle tout l'espace aérien.</div></div>
+                    <div class="attack-item"><span>✨</span> <div><strong>Rayon Concentré (Beam) :</strong> Faisceau lumineux rectiligne traversant instantanément le terrain.</div></div>
+                    <div class="attack-item"><span>🌌</span> <div><strong>Distorsion & Gravité (Warp / Gravity) :</strong> Téléportation spatiale de repli et puits gravitationnel ralentissant l'ennemi.</div></div>
                 </div>
             </div>
 
         </div>
     </section>
 
-    <!-- SECTION TIPS & ASTUCES -->
+    <!-- SECTION TIPS & ASTUCES DE PRO -->
     <section id="tips" style="background: rgba(0,0,0,0.25);">
         <div class="section-header">
             <h2>Guide Stratégique & Tips de Pro</h2>
-            <p>Maîtrisez ces principes pour grimper les 100 étages et écraser vos adversaires en multijoueur local.</p>
+            <p>Dans l'Arène des Origines, la force brute ne suffit pas. Voici les mécaniques clés pour atteindre le 100ᵉ étage et triompher en multijoueur.</p>
         </div>
 
         <div class="tips-grid">
             <div class="tip-card">
                 <span class="tip-badge">Mécanique Clé</span>
                 <h3>La punition de fin d'animation</h3>
-                <p>Chaque coup lourd possède un temps de récupération. Attendez que l'adversaire rate son attaque lourde pour le punir avec votre combo le plus rapide.</p>
+                <p>Chaque coup puissant (comme le Smash de Drak ou la Charge de Brutus) possède un temps de récupération. Attendez que l'adversaire rate son coup lourd pour riposter immédiatement avec votre combo le plus rapide.</p>
             </div>
             <div class="tip-card">
-                <span class="tip-badge">Positionnement</span>
-                <h3>Tenir le centre de la dalle</h3>
-                <p>Rester au centre vous offre des options de repli dans toutes les directions. Évitez de vous faire acculer sur les rebords extérieurs sous peine d'être projeté hors du ring.</p>
+                <span class="tip-badge">Mobilité & Rebond</span>
+                <h3>Double saut et accroche aux rebords</h3>
+                <p>Le double saut est disponible en l'air pour tous les combattants (et triple saut pour Zephyr), et votre héros s'accroche automatiquement aux rebords des plateformes pour revenir dans l'arène.</p>
             </div>
             <div class="tip-card">
-                <span class="tip-badge">Matchup Distance</span>
-                <h3>Contrer les mages (Kaldrin / Nova)</h3>
-                <p>Ne reculez jamais face à un lanceur de sorts. Utilisez les sauts et les attaques plongeantes pour passer à travers les projectiles et l'engager au corps à corps.</p>
+                <span class="tip-badge">Matchup Mages</span>
+                <h3>Casser la distance face à Kaldrin et Nova</h3>
+                <p>Face aux mages à longue portée, ne reculez jamais. Utilisez les sauts, le Dash Fantôme de Shadow ou le Dive Kick de Drak pour passer au-dessus des projectiles et engager le combat rapproché.</p>
             </div>
             <div class="tip-card">
                 <span class="tip-badge">Multijoueur Sans Latence</span>
-                <h3>Duels en Wi-Fi local</h3>
-                <p>Connectez deux téléphones au même réseau Wi-Fi local pour des combats fluides à 0 ms de décalage grâce au protocole direct intégré au jeu.</p>
+                <h3>Duels directs en Wi-Fi local</h3>
+                <p>Pour affronter un ami avec zéro décalage, connectez les deux téléphones sur le même réseau Wi-Fi local : les coups sont synchronisés directement d'appareil à appareil.</p>
             </div>
         </div>
     </section>
 
-    <!-- SECTION SOUTIEN / DONATION (PAYPAL OFFICIEL) -->
+    <!-- SECTION SOUTIEN / DONATION -->
     <section id="soutenir">
         <div class="support-box">
             <div style="font-size: 3.2rem; margin-bottom: 0.8rem;">☕🛡️</div>
             <h2>Soutenir le Créateur</h2>
             <p style="color: var(--text-muted); font-size: 1.15rem; max-width: 650px; margin: 0 auto 1.5rem;">
-                Je développe <strong>Arène des Origines</strong> en solo et en autodidacte sur mon temps libre. Vos dons m'aident directement à couvrir les frais d'inscription aux stores et à faire grandir le projet !
+                Je ne suis pas développeur de métier : je conçois <strong>Arène des Origines</strong> en solo et en autodidacte sur mon temps libre. Vos soutiens m'aident directement à couvrir les frais d'inscription aux stores Apple & Google et à enrichir le jeu !
             </p>
             <div class="donation-options">
                 <a href="https://paypal.me/arenedesorigines" target="_blank" class="donation-btn btn-paypal">
@@ -1073,7 +1091,7 @@
                 </a>
             </div>
             <p style="margin-top: 1.5rem; font-size: 0.95rem; color: #9ca3af;">
-                Merci à chaque joueur qui soutient cette aventure indépendante !
+                Un immense merci à chaque joueur qui soutient cette aventure indépendante !
             </p>
         </div>
     </section>
@@ -1082,7 +1100,7 @@
     <section id="amelioration">
         <div class="section-header">
             <h2>Boîte à Idées & Améliorations</h2>
-            <p>Une suggestion de gameplay, un bug à signaler ou une idée de nouveau combattant ? Écrivez-moi directement !</p>
+            <p>Une idée de nouveau champion, un réglage d'équilibrage ou un bug à signaler ? Vos retours façonnent directement les prochaines mises à jour du jeu !</p>
         </div>
 
         <div class="contact-container">
@@ -1117,7 +1135,7 @@
         </div>
     </section>
 
-    <!-- SECTION POLITIQUE DE CONFIDENTIALITÉ -->
+    <!-- SECTION POLITIQUE DE CONFIDENTIALITÉ COMPLÈTE -->
     <section id="confidentialite">
         <div class="section-header">
             <h2>Politique de Confidentialité</h2>
@@ -1191,7 +1209,7 @@
         </div>
     </footer>
 
-    <!-- GESTION DE LA MUSIQUE (CUSTOM_BLADE) -->
+    <!-- GESTION DE LA MUSIQUE -->
     <script>
         let isPlaying = false;
         const bgAudio = document.getElementById('bgMusic');
@@ -1205,7 +1223,7 @@
                     audioBtn.style.background = 'var(--primary)';
                     audioBtn.style.color = '#000';
                 }).catch(err => {
-                    alert("Pour écouter la musique, déposez ton fichier audio sous le nom exact 'Custom_Blade (1).mp4' ou 'musique.mp3' à la racine de ton dépôt GitHub !");
+                    alert("Vérifie que le fichier 'Custom_Blade (1).mp4' est bien téléversé sur ton dépôt GitHub !");
                 });
             } else {
                 bgAudio.pause();
