@@ -1,20 +1,42 @@
-// Arene des Origines : cache hors ligne (version 58ca93f853)
+// Arene des Origines : cache hors ligne (version 58ca93f853, correctif iPhone 1)
 const CACHE = 'arene-58ca93f853';
 const PRE = ["./", "index.html", "favicon.png", "icon-180.png", "icon-192.png", "icon-512.png", "manifest.webmanifest", "sw.js"];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.all(PRE.map(u =>
-      c.add(new Request(u, {mode: u.startsWith('http') ? 'cors' : 'same-origin'})).catch(err => console.warn('precache', u, err))
+      c.add(new Request(u, {mode: u.startsWith('http') ? 'cors' : 'same-origin', cache: 'reload'})).catch(err => console.warn('precache', u, err))
   ))).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith('arene-') && k !== CACHE && k !== 'arene-cine').map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
+
+// index.html et la page : RESEAU D'ABORD (le cache seulement hors ligne), pour que
+// chaque correction arrive aussi sur les iPhone qui ont deja la page en cache.
+function arPage(url, req) {
+  if (req.mode === 'navigate') return true;
+  const p = url.pathname;
+  return p.endsWith('/') || p.endsWith('/index.html') || p.endsWith('/sw.js') || p.endsWith('/manifest.webmanifest');
+}
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   const cine = url.pathname.indexOf('/cine/') >= 0;
+  if (url.origin === location.origin && arPage(url, req)) {
+    e.respondWith((async () => {
+      try {
+        const r = await fetch(url.href, {cache: 'no-cache', credentials: 'same-origin'});
+        if (r.ok && r.status === 200) { const c = await caches.open(CACHE); c.put(req, r.clone()); }
+        return r;
+      } catch (err) {
+        const any = await caches.match(req, {ignoreSearch: true});
+        if (any) return any;
+        throw err;
+      }
+    })());
+    return;
+  }
   // les videos (requetes Range sur iPhone) : on sert le fichier entier depuis le cache si on l'a
   e.respondWith((async () => {
     const store = await caches.open(cine ? 'arene-cine' : CACHE);
