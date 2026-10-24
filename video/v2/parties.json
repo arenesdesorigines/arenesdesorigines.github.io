@@ -1,0 +1,66 @@
+{
+ "video": "bande-annonce v2 (1280x720, H.264 + AAC, 71 s)",
+ "hls": "index.m3u8",
+ "parties": [
+  {
+   "fichier": "init.mp4",
+   "taille": 1358,
+   "sha256": "7f1f4ee8d8afedea45894986fda44fca107cbf4fd9473790dc2031b0a7f984a8"
+  },
+  {
+   "fichier": "seg00.m4s",
+   "taille": 977954,
+   "sha256": "957caf9fc7922536888e56719439cf6d0a9ccebdf643897a1027857a59a03e1b"
+  },
+  {
+   "fichier": "seg01.m4s",
+   "taille": 1077079,
+   "sha256": "9078478db1faeaacd8eb5c80b46f041439fc0e710f72b5f358db0c6e746b29f8"
+  },
+  {
+   "fichier": "seg02.m4s",
+   "taille": 920756,
+   "sha256": "d81ac7cc3d020807e7d06d4a60dc4d78f66221b7ae8293304fbc787b40c7bfb3"
+  },
+  {
+   "fichier": "seg03.m4s",
+   "taille": 933700,
+   "sha256": "546b751184013e8f7ffa406da3225dca41b5bb31171627ec58cdf1caf63a2987"
+  },
+  {
+   "fichier": "seg04.m4s",
+   "taille": 1039286,
+   "sha256": "69ceef29f9172af638d2ed66aedd0eb8f6e7b0a1c5d3310bda5dd7f59b0d7845"
+  },
+  {
+   "fichier": "seg05.m4s",
+   "taille": 1649940,
+   "sha256": "3dd76bc8ea7ee15c5288cfb060359ad4a4d848ba51a46d9c7f32e36c8c46e18d"
+  },
+  {
+   "fichier": "seg06.m4s",
+   "taille": 513303,
+   "sha256": "49a628babd5fd8b09c1e3cc69907c7d5eb2524e54eadcebf540405013680f383"
+  },
+  {
+   "fichier": "seg07.m4s",
+   "taille": 1495274,
+   "sha256": "891aa5777425a5e3b8abc5fec7b1d1ccababb513edbdbc66543e71e3681e356b"
+  },
+  {
+   "fichier": "seg08.m4s",
+   "taille": 1662898,
+   "sha256": "6723784231b1060e6003368c7b1d6fb2a8b239764ad0744b1127f538dd952962"
+  },
+  {
+   "fichier": "seg09.m4s",
+   "taille": 1299139,
+   "sha256": "e9ed2f649d264a3d9a11c93265c95add943051e9f05f5c09f65bf9f6113593ea"
+  },
+  {
+   "fichier": "seg10.m4s",
+   "taille": 1636227,
+   "sha256": "3c7de80a0e29c0a59d59604a7765393fdfb8fbee24492960eb68fe41e3498d54"
+  }
+ ]
+}

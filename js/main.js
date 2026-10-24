@@ -89,13 +89,56 @@ const musique = (() => {
   return {pause() { if (!audio.paused) audio.pause(); }};
 })();
 
-/* ---------- Bande-annonce : se charge seulement quand on appuie sur lecture ---------- */
+/* ---------- Bande-annonce v2 : se charge seulement quand on appuie sur lecture ----------
+   La vidéo est découpée en morceaux de moins de 2,4 Mo (video/v2/, liste dans parties.json) :
+   - Safari / iPhone : lecture native du flux HLS (index.m3u8) ;
+   - les autres navigateurs : les morceaux (init.mp4 + segNN.m4s) sont recollés ici en une vidéo.
+   Si quelque chose échoue, on lit l'ancienne bande-annonce (data-repli). */
 function videoJoue() { const v = document.getElementById("trailer"); return v && !v.paused; }
 (() => {
   const v = document.getElementById("trailer"), p = document.getElementById("trailerPlay");
   if (!v) return;
-  const go = () => { if (p) p.hidden = true; v.controls = true; v.play().catch(() => {}); };
-  if (p) p.addEventListener("click", go);
+  const lbl = p ? p.querySelector("em") : null, txt0 = lbl ? lbl.textContent : "";
+  let pret = !v.dataset.parties, enCours = false;
+  const dire = t => { if (lbl) lbl.textContent = t; };
+  const lancer = () => {
+    v.controls = true;
+    const r = v.play();
+    if (p) p.hidden = true;
+    if (r && r.catch) r.catch(() => { if (p) { p.hidden = false; dire("Prête ! Touche pour lancer"); } });
+  };
+  const charger = async () => {
+    if (pret) return lancer();
+    if (enCours) return;
+    enCours = true; dire("Chargement… 0 %");
+    try {
+      const base = v.dataset.parties.replace(/[^/]*$/, "");
+      const man = await (await fetch(v.dataset.parties, {cache: "no-cache"})).json();
+      if (man.hls && v.canPlayType("application/vnd.apple.mpegurl")) {
+        v.src = base + man.hls; pret = true; enCours = false; dire(txt0); return lancer();
+      }
+      const tot = man.parties.reduce((a, x) => a + x.taille, 0);
+      let fait = 0;
+      const morceaux = await Promise.all(man.parties.map(async x => {
+        const r = await fetch(base + x.fichier);
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        const b = await r.blob();
+        if (b.size !== x.taille) throw new Error("taille");
+        fait += x.taille; dire("Chargement… " + Math.round(fait * 100 / tot) + " %");
+        return b;
+      }));
+      v.src = URL.createObjectURL(new Blob(morceaux, {type: "video/mp4"}));
+    } catch (e) {
+      v.src = v.dataset.repli || "video/bande-annonce.mp4";
+    }
+    pret = true; enCours = false; dire(txt0);
+    lancer();
+  };
+  if (p) p.addEventListener("click", charger);
+  v.addEventListener("error", () => {
+    const repli = v.dataset.repli || "video/bande-annonce.mp4";
+    if (v.dataset.parties && !v.src.endsWith(repli)) { v.src = repli; lancer(); }
+  });
   v.addEventListener("play", () => { musique.pause(); if (p) p.hidden = true; });
 })();
 
