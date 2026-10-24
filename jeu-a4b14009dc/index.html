@@ -1,4 +1,46 @@
-<html lang="fr"><script>(function(){var P='https://pygame-web'+'.github.io/',L=new URL('pgw/',document.baseURI).href,BASE=new URL('./',document.baseURI).href,of=window.fetch.bind(window);
+<html lang="fr"><script>/* ar-ios-ume v1 */
+(function () {
+  // Debloque « Touchez pour jouer » sur iPhone : iOS n'envoie pas de click a window
+  // pour un toucher sur un element non cliquable, alors on ecoute le toucher lui-meme.
+  var geste = false, ctxs = [], moi = null;
+  function suivre(n) {
+    var O = window[n];
+    if (!O || O.__ar) return;
+    var W = function (a) { var c = arguments.length ? new O(a) : new O(); ctxs.push(c); return c; };
+    W.prototype = O.prototype; W.__ar = 1;
+    try { window[n] = W; } catch (e) {}
+  }
+  suivre('AudioContext'); suivre('webkitAudioContext');
+  function reveil() {
+    geste = true;
+    try { if (window.MM && !window.MM.UME) window.MM.UME = 1; } catch (e) {}
+    for (var i = 0; i < ctxs.length; i++) {
+      try { if (ctxs[i].state !== 'running' && ctxs[i].resume) ctxs[i].resume(); } catch (e) {}
+    }
+    if (!moi) {
+      // un son vide joue DANS le geste : iOS ouvre alors le son pour la page
+      try {
+        moi = new (window.AudioContext || window.webkitAudioContext)();
+        var b = moi.createBuffer(1, 1, 22050), s = moi.createBufferSource();
+        s.buffer = b; s.connect(moi.destination); (s.start ? s.start(0) : s.noteOn(0));
+      } catch (e) { moi = 1; }
+    }
+  }
+  ['touchend', 'pointerup', 'mouseup', 'click', 'keydown'].forEach(function (t) {
+    document.addEventListener(t, reveil, {capture: true, passive: true});
+    window.addEventListener(t, reveil, {capture: true, passive: true});
+  });
+  // pygbag remet MM.UME a 0 en demarrant : si on a deja touche, on le remet a 1
+  var tic = setInterval(function () {
+    try {
+      if (geste && window.MM && !window.MM.UME) window.MM.UME = 1;
+      var ib = document.getElementById('infobox');
+      if (ib && ib.style.display === 'none') clearInterval(tic);
+    } catch (e) {}
+  }, 150);
+  window.__arIos = function () { return {geste: geste, ctx: ctxs.length}; };
+})();
+</script><script>(function(){var P='https://pygame-web'+'.github.io/',L=new URL('pgw/',document.baseURI).href,BASE=new URL('./',document.baseURI).href,of=window.fetch.bind(window);
 var CH={"app.tar.gz": 25, "pgw/cdn/0.9.3/cpython312/main.data": 3, "pgw/cdn/0.9.3/cpython312/main.wasm": 6},mem={};
 function loc(u){if(typeof u==='string'&&u.indexOf(P)===0)return L+u.slice(P.length);return u;}
 function key(u){try{var a=new URL(u,document.baseURI).href.split('?')[0];if(a.indexOf(BASE)!==0)return null;var k=a.slice(BASE.length);return CH[k]?k:null;}catch(e){return null;}}
@@ -221,7 +263,9 @@ function show_infobox() {
                 font:600 20px -apple-system, system-ui, sans-serif; align-items:center; justify-content:center;
                 text-align:center; padding:30px; }
       @media (orientation: portrait) and (max-width: 900px) { #tourne { display:flex; } }
-    </style>
+    
+      #infobox { cursor:pointer; -webkit-tap-highlight-color: transparent; }
+</style>
 
 
     <style>
@@ -415,7 +459,7 @@ height="720px"
     oncontextmenu="event.preventDefault()" tabindex=1 hidden>
     </canvas>
 
-    <div id="infobox">Chargement du jeu… (la première fois, ~60 Mo)</div>
+    <div id="infobox" onclick="void 0">Chargement du jeu… (la première fois, ~60 Mo)</div>
 
     <div id=html></div>
 
