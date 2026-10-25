@@ -187,7 +187,7 @@ function videoJoue() { const v = document.getElementById("trailer"); return v &&
     const d = new FormData(form);
     const sujet = "[Arène des Origines] " + d.get("type");
     const corps = "Pseudo : " + d.get("pseudo") + "\nType : " + d.get("type") + "\n\n" + d.get("details");
-    window.location.href = "mailto:binyamine555@gmail.com?subject=" + encodeURIComponent(sujet) + "&body=" + encodeURIComponent(corps);
-    msg.textContent = "Ton application e-mail devrait s'ouvrir. Si rien ne se passe, écris à binyamine555@gmail.com.";
+    window.location.href = "mailto:arenedesorigines@gmail.com?subject=" + encodeURIComponent(sujet) + "&body=" + encodeURIComponent(corps);
+    msg.textContent = "Ton application e-mail devrait s'ouvrir. Si rien ne se passe, écris à arenedesorigines@gmail.com.";
   });
 })();
