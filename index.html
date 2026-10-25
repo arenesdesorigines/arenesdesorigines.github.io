@@ -28,6 +28,7 @@
     <button class="icon-btn" id="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menu">☰</button>
     <nav aria-label="Navigation principale">
       <ul class="menu" id="menu">
+        <li><a href="#inscription">S'inscrire</a></li>
         <li><a href="#telecharger">Télécharger</a></li>
         <li><a href="#jeu">Le jeu</a></li>
         <li><a href="#personnages">Combattants</a></li>
@@ -65,7 +66,8 @@
     </div>
     <div class="hero-actions">
       <div class="cta">
-        <a class="btn" href="#telecharger" data-hero-dl>Télécharger le jeu</a>
+        <a class="btn" href="#inscription">Être prévenu en premier</a>
+        <a class="btn sec" href="#telecharger" data-hero-dl>Télécharger le jeu</a>
         <a class="btn sec" href="#personnages">Découvrir les combattants</a>
         <a class="btn sec" href="#soutenir">Soutenir le créateur</a>
       </div>
@@ -76,6 +78,62 @@
     </div>
   </div>
 </section>
+
+<section class="fond" id="inscription" style="padding-top:28px;padding-bottom:28px">
+  <div class="wrap">
+    <div class="carte insc-carte">
+      <h2><small>Liste d'attente</small>Sois le premier prévenu</h2>
+      <p class="lead" style="margin-bottom:6px">Le jeu n'est pas encore sorti. Laisse ton e-mail : tu seras parmi les premiers à savoir quand il sort. Et je cherche des <b>testeurs assidus</b> : coche la case si tu veux tester avant tout le monde.</p>
+      <form id="formInscription" class="insc-form" action="https://formsubmit.co/c82d6a4fb50b40e25b150aeb48d70608" method="POST">
+        <label for="inscEmail">Ton adresse e-mail</label>
+        <div class="insc-ligne">
+          <input id="inscEmail" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="ton.email@exemple.com" maxlength="120">
+          <button class="btn" type="submit">Je m'inscris</button>
+        </div>
+        <label class="insc-check"><input type="checkbox" name="testeur" value="oui"> Je veux être testeur</label>
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="_subject" value="Nouvelle inscription : liste d'attente Arène des Origines">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="https://arenesdesorigines.github.io/#inscription-merci">
+        <p aria-live="polite" class="form-msg" id="inscMsg" role="status"></p>
+        <p class="note" style="margin:4px 0 0">Ton e-mail sert uniquement à te prévenir de la sortie (et des tests si tu as coché). Pas de spam, désinscription sur simple demande à arenedesorigines@gmail.com.</p>
+      </form>
+    </div>
+  </div>
+</section>
+<style>
+.insc-carte{border:1px solid var(--line2);box-shadow:0 0 0 1px rgba(255,196,46,.25),0 10px 40px rgba(0,0,0,.35)}
+.insc-ligne{display:flex;gap:10px;flex-wrap:wrap}
+.insc-ligne input{flex:1 1 220px}
+.insc-ligne .btn{flex:0 0 auto}
+.insc-check{display:flex!important;align-items:center;gap:10px;font-weight:600!important;cursor:pointer}
+.insc-check input{width:auto;margin:0}
+.insc-form .form-msg.err{color:#ff6b5a}
+</style>
+<script>
+(function(){
+  var f=document.getElementById("formInscription"), m=document.getElementById("inscMsg");
+  if(!f) return;
+  if(location.hash==="#inscription-merci"){m.textContent="Merci ! Tu es inscrit, tu seras prévenu en premier.";}
+  f.addEventListener("submit",function(e){
+    if(!window.fetch||!window.FormData) return;
+    e.preventDefault();
+    var b=f.querySelector("button[type=submit]"), d={};
+    new FormData(f).forEach(function(v,k){d[k]=v;});
+    if(d._honey) return;
+    b.disabled=true; m.className="form-msg"; m.textContent="Envoi…";
+    fetch("https://formsubmit.co/ajax/c82d6a4fb50b40e25b150aeb48d70608",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(d)})
+      .then(function(r){return r.json();})
+      .then(function(j){
+        if(j && (j.success===true||j.success==="true")){m.textContent="Merci ! Tu es inscrit, tu seras prévenu en premier.";f.reset();}
+        else{throw new Error((j&&j.message)||"erreur");}
+      })
+      .catch(function(){m.className="form-msg err";m.innerHTML='Oups, l\'envoi n\'a pas marché. Réessaie, ou écris à <a href="mailto:arenedesorigines@gmail.com">arenedesorigines@gmail.com</a>.';})
+      .then(function(){b.disabled=false;});
+  });
+})();
+</script>
 
 <section class="fond f2" id="telecharger">
   <div class="wrap">
@@ -89,7 +147,7 @@
         <ul class="apk-infos">
           <li>Version <b>14.7</b> (test)</li><li>Android <b>7.0</b> ou plus récent</li><li>Téléphones <b>64 bits</b></li><li>Environ <b>50 Mo</b></li>
         </ul>
-        <a class="btn sec" href="#amelioration" data-dl="apk">Être prévenu de la sortie</a>
+        <a class="btn sec" href="#inscription" data-dl="apk">Être prévenu de la sortie</a>
         <ol class="etapes">
           <li>Télécharge le fichier APK sur ton téléphone Android.</li>
           <li>Ouvre-le : Android te demande d'autoriser l'installation depuis ton navigateur ou ton gestionnaire de fichiers. Accepte pour cette source.</li>
