@@ -258,7 +258,7 @@ footer a{color:var(--muted)}
 @media (min-width:1241px){.brand{flex:none}.menu a{padding:8px 7px;font-size:.88rem}}
 
 /* Tab 26/10 : prochaines étapes + histoire des combattants */
-.etapes-grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px;margin-top:22px}
+.etapes-grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:22px}
 .carte.etape{padding:18px 18px 16px}
 .carte.etape h3{margin:10px 0 6px}
 .carte.etape p{margin:0;color:var(--muted);line-height:1.55}
