@@ -256,3 +256,16 @@ footer a{color:var(--muted)}
 .art-music .mi{position:absolute;right:6px;bottom:10px;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(11,7,22,.8);border:1px solid var(--line2);font-size:16px}
 .apk-note{margin:0 0 10px;color:var(--muted);font-size:.95rem}
 @media (min-width:1241px){.brand{flex:none}.menu a{padding:8px 7px;font-size:.88rem}}
+
+/* Tab 26/10 : prochaines étapes + histoire des combattants */
+.etapes-grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px;margin-top:22px}
+.carte.etape{padding:18px 18px 16px}
+.carte.etape h3{margin:10px 0 6px}
+.carte.etape p{margin:0;color:var(--muted);line-height:1.55}
+.carte.etape i{display:block;margin-top:8px;font-style:normal;color:var(--gold);font-size:.92em}
+.etapes-cta{margin-top:20px;text-align:center}
+.lore{margin:10px 0 12px;padding:10px 12px;border-left:3px solid var(--gold);background:#ffffff0a;border-radius:0 10px 10px 0}
+.lore b{display:block;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.lore p{margin:0;line-height:1.5}
+.lore .lore-etage{margin-top:6px;font-size:.88em;color:var(--cyan)}
+@media (min-width:1241px) and (max-width:1440px){.menu{gap:0}.menu a{padding:8px 6px;font-size:.84rem}}
