@@ -1,5 +1,5 @@
-// Arene des Origines : cache hors ligne (version 58ca93f853, correctif iPhone 1)
-const CACHE = 'arene-58ca93f853';
+// Arene des Origines : cache hors ligne (version 3dd7f886f7, correctif iPhone 1)
+const CACHE = 'arene-3dd7f886f7';
 const PRE = ["./", "index.html", "favicon.png", "icon-180.png", "icon-192.png", "icon-512.png", "manifest.webmanifest", "sw.js"];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.all(PRE.map(u =>

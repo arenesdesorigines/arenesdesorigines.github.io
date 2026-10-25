@@ -1,4 +1,152 @@
-<html lang="fr"><script>/* ar-ios-ume v1 */
+<html lang="fr"><script>/* ar-diag v1 */
+(function () {
+  // Diagnostic de l'ecran noir (iPhone) : etapes du chargement, erreurs, console,
+  // et detection d'un ecran qui reste noir. Envoye a un canal prive (ntfy) pour
+  // qu'on voie ce qui se passe sur un vrai telephone. Aucune donnee personnelle.
+  var T0 = Date.now(), ID = Math.random().toString(36).slice(2, 7);
+  var TOPIC = 'https://ntfy.sh/arene-diag-q7m4x9k2';
+  var steps = [], errs = [], logs = [], sent = 0, lastSend = 0, pend = null;
+  var parts = 0, started = 0, black = 0, okFrames = 0, info = '', shown = false;
+  var SHOW = /[#&?]diag/.test(location.href);
+  function t() { return ((Date.now() - T0) / 1000).toFixed(1); }
+  function cut(s, n) { s = String(s); return s.length > n ? s.slice(0, n) + '…' : s; }
+  function step(s) { steps.push(t() + ' ' + s); if (steps.length > 40) steps.shift(); draw(); later(1500); }
+  window.__arStep = step;
+  ['log', 'info', 'warn', 'error'].forEach(function (k) {
+    var o = console[k];
+    console[k] = function () {
+      try {
+        var a = [].slice.call(arguments).map(function (x) { try { return typeof x === 'string' ? x : (x && x.stack) ? x.stack : JSON.stringify(x); } catch (e) { return String(x); } }).join(' ');
+        a = a.replace(/\s+/g, ' ').trim();
+        if (a) { logs.push(t() + ' ' + k[0] + ' ' + cut(a, 220)); if (logs.length > 70) logs.shift(); }
+        if (k === 'error' || /Traceback|Error|Exception/.test(a)) { errs.push(t() + ' ' + cut(a, 300)); if (errs.length > 25) errs.shift(); later(3000); }
+        if (SHOW) draw();
+      } catch (e) {}
+      return o.apply(console, arguments);
+    };
+  });
+  window.addEventListener('error', function (e) {
+    errs.push(t() + ' JS ' + cut((e.message || e.type) + ' @' + String(e.filename || (e.target && (e.target.src || e.target.href)) || '').split('/').pop() + ':' + (e.lineno || ''), 300));
+    later(2000);
+  }, true);
+  window.addEventListener('unhandledrejection', function (e) { errs.push(t() + ' REJ ' + cut(e.reason && (e.reason.stack || e.reason), 300)); later(2000); });
+  window.addEventListener('pagehide', function () { step('pagehide'); send(true); });
+  document.addEventListener('visibilitychange', function () { step('visible=' + document.visibilityState); });
+  window.addEventListener('orientationchange', function () { step('orientation'); });
+  try {
+    new PerformanceObserver(function (l) {
+      l.getEntries().forEach(function (en) {
+        var n = en.name.split('/').pop();
+        if (/\.part\d+$/.test(n)) { parts++; if (parts % 8 === 0) step('morceaux recus ' + parts); }
+        else if (/main\.js|pythons\.js|\.whl|cpythonrc/.test(n)) step('fichier ' + cut(n, 50) + ' ' + Math.round(en.duration) + 'ms');
+      });
+    }).observe({type: 'resource', buffered: true});
+  } catch (e) {}
+  function heap() { try { return Math.round(Module.HEAP8.length / 1048576); } catch (e) { return -1; } }
+  function env() {
+    var vv = window.visualViewport;
+    return {id: ID, t: t(), url: location.pathname, ua: navigator.userAgent, dpr: devicePixelRatio,
+      scr: screen.width + 'x' + screen.height, win: innerWidth + 'x' + innerHeight,
+      vv: vv ? Math.round(vv.width) + 'x' + Math.round(vv.height) + '+' + Math.round(vv.offsetTop) : '',
+      sy: Math.round(window.pageYOffset || 0), mode: document.compatMode, sa: !!(navigator.standalone),
+      mem: navigator.deviceMemory || '', heap: heap(), parts: parts, started: started, black: black, ok: okFrames,
+      info: cut(info, 60), cv: cvInfo(), ume: (window.MM ? window.MM.UME : '?')};
+  }
+  function cvInfo() {
+    var c = document.getElementById('canvas'); if (!c) return 'none';
+    var r = c.getBoundingClientRect(), cs = getComputedStyle(c);
+    return c.width + 'x' + c.height + ' @' + Math.round(r.left) + ',' + Math.round(r.top) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height) + ' ' + cs.visibility + '/' + cs.display;
+  }
+  function later(ms) { if (pend) return; pend = setTimeout(function () { pend = null; send(false); }, ms); }
+  function send(force) {
+    try {
+      var now = Date.now();
+      if (!force && (sent >= 14 || now - lastSend < 4000)) { if (sent < 14) later(4000); return; }
+      lastSend = now; sent++;
+      var e = env(), body = 'AR ' + JSON.stringify(e) + '\nSTEPS ' + steps.join(' | ') + '\nERR ' + errs.join(' | ');
+      body = cut(body, 3000) + '\nLOG ' + logs.slice(-14).join(' | ');
+      body = cut(body, 3900);
+      var opts = {method: 'POST', body: body, mode: 'cors', keepalive: body.length < 60000};
+      (window.__arOrigFetch || fetch)(TOPIC, opts).catch(function () {});
+    } catch (x) {}
+  }
+  window.__arDiagSend = send; window.__arDiagEnv = env;
+  window.__arOrigFetch = window.fetch.bind(window);
+  var box = null, help = null;
+  function draw() {
+    if (!SHOW) return;
+    if (!box) { box = document.createElement('div'); box.style.cssText = 'position:fixed;left:0;top:0;right:0;max-height:60%;overflow:hidden;z-index:3000000;background:rgba(0,0,0,.72);color:#9f9;font:10px/1.25 monospace;padding:4px;pointer-events:none;white-space:pre-wrap'; (document.body || document.documentElement).appendChild(box); }
+    var e = env();
+    box.textContent = 'diag ' + ID + ' t=' + e.t + ' parts=' + e.parts + ' heap=' + e.heap + 'Mo started=' + e.started + ' black=' + e.black + ' ok=' + e.ok + ' cv=' + e.cv + ' win=' + e.win + ' vv=' + e.vv + ' sy=' + e.sy + '\n' + steps.slice(-8).join('\n') + '\nERR:\n' + errs.slice(-6).join('\n') + '\nLOG:\n' + logs.slice(-10).join('\n');
+  }
+  function helpBox() {
+    if (help) return;
+    help = document.createElement('div');
+    help.style.cssText = 'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2900000;background:#1a1030;color:#ffe9b0;border:2px solid #c8aaff;border-radius:12px;padding:14px 18px;font:600 15px -apple-system,system-ui,sans-serif;text-align:center;max-width:80vw';
+    help.innerHTML = 'Le jeu n\u2019arrive pas \u00e0 s\u2019afficher sur cet appareil.<br><span style="font-weight:400;font-size:13px">Le diagnostic a \u00e9t\u00e9 envoy\u00e9 (code <b>' + ID + '</b>).</span><br><br>' +
+      '<button style="font:600 15px -apple-system,system-ui,sans-serif;padding:8px 16px;border-radius:10px;border:0;background:#c8aaff;color:#1a1030" onclick="location.reload()">Recharger</button>';
+    document.body.appendChild(help);
+  }
+  // l'ecran du jeu : on lit quelques pixels pour savoir s'il reste noir
+  var pc = null, px = null;
+  function lum() {
+    var c = document.getElementById('canvas'); if (!c || c.width < 8) return -1;
+    try {
+      if (!pc) { pc = document.createElement('canvas'); pc.width = 32; pc.height = 18; px = pc.getContext('2d', {willReadFrequently: true}); }
+      px.clearRect(0, 0, 32, 18); px.drawImage(c, 0, 0, 32, 18);
+      var d = px.getImageData(0, 0, 32, 18).data, m = 0;
+      for (var i = 0; i < d.length; i += 4) { var v = d[i] + d[i + 1] + d[i + 2]; if (v > m) m = v; }
+      return m;
+    } catch (e) { return -2; }
+  }
+  var tick = setInterval(function () {
+    try {
+      var ib = document.getElementById('infobox');
+      if (ib) {
+        var s = ib.style.display === 'none' ? '(cache)' : ib.innerText;
+        if (s !== info) { info = s; step('infobox: ' + cut(s, 40)); }
+        if (s === '(cache)' && !started) { started = Date.now(); step('jeu demarre heap=' + heap() + 'Mo cv=' + cvInfo()); }
+      }
+      if (started) {
+        var v = document.querySelector('video');
+        var vidOn = v && v.style.display === 'block';
+        var L = lum();
+        if (L > 30 || vidOn) { okFrames++; black = 0; if (help) { help.remove(); help = null; } }
+        else if (L >= 0) black++;
+        if (okFrames === 1) { step('image visible (lum ' + L + ')'); send(true); }
+        if (black === 5) { step('ECRAN NOIR 10s lum=' + L + ' cv=' + cvInfo()); send(true); }
+        if (black === 8 && !okFrames) helpBox();
+        if (okFrames === 15) { step('ok 30s'); send(true); clearInterval(tick); }
+      }
+      if (SHOW) draw();
+    } catch (e) {}
+  }, 2000);
+  setTimeout(function () { if (!started) { step('pas demarre apres 90s'); send(true); } }, 90000);
+  step('page ' + navigator.userAgent.replace(/^Mozilla\/5\.0 /, '').slice(0, 90));
+  window.addEventListener('load', function () { step('load'); });
+})();
+</script><script>/* ar-voix v1 */
+window.__arVoixList = ["e06_0d6a2b42.ogg", "e06_19c34759.ogg", "e06_2851cda4.ogg", "e06_48d0db35.ogg", "e06_79c14647.ogg", "e06_887e1f95.ogg", "e06_8f994249.ogg", "e06_a76f2af6.ogg", "e06_e3729f71.ogg", "e06_f4baf85b.ogg", "e06_f931e25b.ogg", "e07_03add821.ogg", "e07_478feb09.ogg", "e07_768fd0ef.ogg", "e07_79fb8d6a.ogg", "e07_7fc94893.ogg", "e07_81aae728.ogg", "e07_8506033b.ogg", "e07_860732d3.ogg", "e07_87906b8b.ogg", "e07_8827b303.ogg", "e07_e54f0b9b.ogg", "e07_f28c81a3.ogg", "e07_f503edcf.ogg", "e08_31239c32.ogg", "e08_33f4493c.ogg", "e08_46526f09.ogg", "e08_5c390fa5.ogg", "e08_6d23602f.ogg", "e08_6e58a8de.ogg", "e08_8b873b7a.ogg", "e08_9142bd27.ogg", "e08_b44046ae.ogg", "e08_c63b0616.ogg", "e08_feb59cea.ogg", "e08_ff054423.ogg", "e09_089bedce.ogg", "e09_1fd29740.ogg", "e09_264c3a8f.ogg", "e09_44e87c06.ogg", "e09_4d03e879.ogg", "e09_79669451.ogg", "e09_b65ca40b.ogg", "e09_b98982b5.ogg", "e09_d6b4bef2.ogg", "e09_f44962b4.ogg", "e09_f60178b0.ogg", "e100_16fb2ada.ogg", "e100_1a170222.ogg", "e100_352a8418.ogg", "e100_37cc9801.ogg", "e100_395cefd0.ogg", "e100_3aad1e3e.ogg", "e100_3afacc99.ogg", "e100_3c0274cc.ogg", "e100_44980e86.ogg", "e100_44a86437.ogg", "e100_55f7e3e7.ogg", "e100_5aa969d9.ogg", "e100_60c24280.ogg", "e100_63239ea6.ogg", "e100_6a7e6ba8.ogg", "e100_6fcfbb99.ogg", "e100_83d70f09.ogg", "e100_853b58c2.ogg", "e100_8c83dcd3.ogg", "e100_aa092991.ogg", "e100_b1738d80.ogg", "e100_e071459b.ogg", "e100_e3542796.ogg", "e100_e6fe3c42.ogg", "e100_eb1a1c89.ogg", "e100_f6c6af63.ogg", "e10_03023b26.ogg", "e10_0bbb1e27.ogg", "e10_1a40b84d.ogg", "e10_21b9d4f2.ogg", "e10_31aa6322.ogg", "e10_55ea7d47.ogg", "e10_59b6b82e.ogg", "e10_6171a291.ogg", "e10_766dc03d.ogg", "e10_7b8a0c38.ogg", "e10_7e35e7f5.ogg", "e10_8023c268.ogg", "e10_84e239e6.ogg", "e10_aa1a1281.ogg", "e10_bc3492ad.ogg", "e10_d56b42c7.ogg", "e10_d9f60984.ogg", "e10_e16d46ae.ogg", "e11_0a9b247c.ogg", "e11_35c27857.ogg", "e11_45194af0.ogg", "e11_594a2a46.ogg", "e11_6989695a.ogg", "e11_7508ec18.ogg", "e11_7d73f2de.ogg", "e11_806a8850.ogg", "e11_a1b57004.ogg", "e11_d8838805.ogg", "e11_d89aa479.ogg", "e11_dc9f9dcc.ogg", "e11_ece0b590.ogg", "e12_0fcb8bdc.ogg", "e12_69ffa86f.ogg", "e12_74244c1c.ogg", "e12_75e53833.ogg", "e12_820da9cf.ogg", "e12_850f9e80.ogg", "e12_d1214093.ogg", "e12_dde195e5.ogg", "e13_068948d3.ogg", "e13_0f441e5b.ogg", "e13_26c1dfef.ogg", "e13_3f7c9b05.ogg", "e13_857873ea.ogg", "e13_9dcca41d.ogg", "e13_b87b6035.ogg", "e13_ba04998c.ogg", "e13_dfb9fd5e.ogg", "e14_27c8877a.ogg", "e14_4ec96bea.ogg", "e14_52aaacf7.ogg", "e14_538c237b.ogg", "e14_9b3ad623.ogg", "e14_b56808db.ogg", "e14_c44004d1.ogg", "e14_eb73c763.ogg", "e14_f07d6d10.ogg", "e14_f70b13d4.ogg", "e15_1f7020d4.ogg", "e15_1fbb130c.ogg", "e15_240abbbe.ogg", "e15_36255dc8.ogg", "e15_3c0b7753.ogg", "e15_4235a9a1.ogg", "e15_6d23c576.ogg", "e15_749511e7.ogg", "e15_9d0db1bc.ogg", "e15_b338713a.ogg", "e15_d1ba9896.ogg", "e16_22c7ae9b.ogg", "e16_279a8966.ogg", "e16_3338ac60.ogg", "e16_5a4ba478.ogg", "e16_5b1f689b.ogg", "e16_90847df3.ogg", "e16_b21d1551.ogg", "e16_bb8d09a5.ogg", "e17_0840b655.ogg", "e17_1d1496f7.ogg", "e17_345c68c3.ogg", "e17_5aab4712.ogg", "e17_7cc83444.ogg", "e17_8201ef6d.ogg", "e17_84978075.ogg", "e17_c0773432.ogg", "e17_d063f2f1.ogg", "e17_d88c35c2.ogg", "e18_188030ca.ogg", "e18_2e1ca055.ogg", "e18_3aad1e3e.ogg", "e18_4de00ac0.ogg", "e18_7e84a14a.ogg", "e18_91e447e5.ogg", "e18_e5360691.ogg", "e19_3311cbd4.ogg", "e19_5510a1ea.ogg", "e19_654038f4.ogg", "e19_772739de.ogg", "e19_838d90a3.ogg", "e19_8d587ba1.ogg", "e19_f5ba442a.ogg", "e19_fc587843.ogg", "e20_1a999443.ogg", "e20_30c03b93.ogg", "e20_435e7a0f.ogg", "e20_48220312.ogg", "e20_51e57144.ogg", "e20_68a6aaa5.ogg", "e20_85be6d2c.ogg", "e20_95b53dd5.ogg", "e20_99478f8c.ogg", "e20_a9943205.ogg", "e20_aa36e656.ogg", "e20_b34c3941.ogg", "e20_f62d58a9.ogg", "e20_f6638350.ogg", "e20_f8bfd81e.ogg", "e21_1d60507a.ogg", "e21_38c7053f.ogg", "e21_46d9dcc9.ogg", "e21_4b8d19e4.ogg", "e21_4b8d9a80.ogg", "e21_813b4b95.ogg", "e21_93c032a2.ogg", "e21_a70f43e9.ogg", "e21_bc5a290e.ogg", "e21_c4298e46.ogg", "e21_ee7a3866.ogg", "e22_1f1b9f95.ogg", "e22_34bd20f4.ogg", "e22_52ac3293.ogg", "e22_6461f4bb.ogg", "e22_6c5ace99.ogg", "e22_74ef0ad1.ogg", "e22_83d0e7cd.ogg", "e22_b1280e2b.ogg", "e22_bb2beae9.ogg", "e22_c3b016ca.ogg", "e22_c5d51dc6.ogg", "e22_f573902d.ogg", "e23_0f6b4283.ogg", "e23_230d13dc.ogg", "e23_4d965bd0.ogg", "e23_664fe685.ogg", "e23_737d5474.ogg", "e23_76e9da46.ogg", "e23_c20b7b13.ogg", "e23_dff61626.ogg", "e23_e667e6d1.ogg", "e24_0a46ef33.ogg", "e24_61d89ee1.ogg", "e24_70a39944.ogg", "e24_89dfd967.ogg", "e24_d433a573.ogg", "e24_e59bd104.ogg", "e24_f66b5a88.ogg", "e24_fb250829.ogg", "e25_0689defc.ogg", "e25_65a6c44f.ogg", "e25_7edc89e9.ogg", "e25_91fb7ead.ogg", "e25_929e0af8.ogg", "e25_99e879a1.ogg", "e25_a8040ae6.ogg", "e25_aa1c30bd.ogg", "e25_d066992a.ogg", "e25_e3b1ebbd.ogg", "e26_1157da54.ogg", "e26_5d606c00.ogg", "e26_839077e4.ogg", "e26_8fd54616.ogg", "e26_9eb45440.ogg", "e26_a1dead89.ogg", "e26_b47cf2f9.ogg", "e26_cdc9803f.ogg", "e27_31b7900b.ogg", "e27_4f36152b.ogg", "e27_59d9bf39.ogg", "e27_7826bdd0.ogg", "e27_7d773463.ogg", "e27_a6d1068d.ogg", "e27_c58a018a.ogg", "e27_de8ae94e.ogg", "e27_ef8d782c.ogg", "e28_0a8307fe.ogg", "e28_16363218.ogg", "e28_28f25e3c.ogg", "e28_3b25beb6.ogg", "e28_5a88277d.ogg", "e28_6791848d.ogg", "e28_80a986d5.ogg", "e28_91dc5f20.ogg", "e28_a264d44a.ogg", "e28_c7a8c2b6.ogg", "e28_e1d4a6f9.ogg", "e29_17d6c489.ogg", "e29_2cce8319.ogg", "e29_3dc6d26e.ogg", "e29_4bb70351.ogg", "e29_528567ab.ogg", "e29_5effa63b.ogg", "e29_7b2a6df0.ogg", "e29_c98b029a.ogg", "e29_de47d59d.ogg", "e29_de7146a6.ogg", "e30_0c9a4d24.ogg", "e30_2511c449.ogg", "e30_39715508.ogg", "e30_3ec8250e.ogg", "e30_4a2c0829.ogg", "e30_58371e92.ogg", "e30_7833d75d.ogg", "e30_7fafe7e1.ogg", "e30_9ddad464.ogg", "e30_a9593e23.ogg", "e30_bdd2f5b1.ogg", "e30_cf8d4c0e.ogg", "e30_d63d85f1.ogg", "e30_e1e8281c.ogg", "e30_e30adabe.ogg", "e30_e86fa9d8.ogg", "e30_f3d259a3.ogg", "e31_00165204.ogg", "e31_003c0270.ogg", "e31_130b35b6.ogg", "e31_615bb692.ogg", "e31_79e15b32.ogg", "e31_ac3d636e.ogg", "e31_dbf8826d.ogg", "e31_e2144b00.ogg", "e31_f3dd19af.ogg", "e31_f58979cf.ogg", "e32_080f7a0c.ogg", "e32_101b9fae.ogg", "e32_187adf17.ogg", "e32_2aa30df7.ogg", "e32_3dc7b623.ogg", "e32_43e90285.ogg", "e32_83dd517f.ogg", "e32_94cdeeb6.ogg", "e32_96988e30.ogg", "e32_bb9d6680.ogg", "e33_35ceec72.ogg", "e33_455ea2dc.ogg", "e33_5b6118eb.ogg", "e33_788b159f.ogg", "e33_8e88748a.ogg", "e33_90c41610.ogg", "e33_d4c1c8e2.ogg", "e34_09ad7915.ogg", "e34_40e2dc79.ogg", "e34_510eaa1d.ogg", "e34_7b32fce3.ogg", "e34_c8650cff.ogg", "e34_d1639091.ogg", "e34_db446055.ogg", "e34_f0c921c6.ogg", "e34_f237b505.ogg", "e35_1dc5a4c7.ogg", "e35_2e4782fc.ogg", "e35_6f90278f.ogg", "e35_71e5278b.ogg", "e35_9bea4a95.ogg", "e35_b0a5d716.ogg", "e35_b2f0dec8.ogg", "e35_b58ba712.ogg", "e35_fec92f7b.ogg", "e36_21e6138c.ogg", "e36_3ddb802c.ogg", "e36_3f327a36.ogg", "e36_610a2b4a.ogg", "e36_61681f34.ogg", "e36_b8de67ad.ogg", "e36_c73f1bb1.ogg", "e36_d34efb3b.ogg", "e36_d3ee8e69.ogg", "e36_d781ecb7.ogg", "e36_da3ec8dc.ogg", "e36_f6e4ea65.ogg", "e37_2c0b87a9.ogg", "e37_38d6cf2e.ogg", "e37_5a2ad132.ogg", "e37_5b82dde5.ogg", "e37_7372cf46.ogg", "e37_9560b75f.ogg", "e37_e14552c6.ogg", "e38_07ee7ae1.ogg", "e38_294e8fa7.ogg", "e38_881b73b8.ogg", "e38_ac9a2b51.ogg", "e38_da6803b2.ogg", "e38_e5c5b201.ogg", "e38_f4e9dc25.ogg", "e39_09918d90.ogg", "e39_304b9f07.ogg", "e39_49976f30.ogg", "e39_4e6eb1d8.ogg", "e39_5866a7c9.ogg", "e39_882c8c4d.ogg", "e39_aa9e961a.ogg", "e39_dcd7de2f.ogg", "e39_e6f51e60.ogg", "e40_0232de57.ogg", "e40_2dbed02a.ogg", "e40_2f807902.ogg", "e40_30d954d5.ogg", "e40_43161adb.ogg", "e40_4474c24e.ogg", "e40_81273a81.ogg", "e40_8e69e4f1.ogg", "e40_be19f85f.ogg", "e40_d72749fc.ogg", "e40_f1beb9f6.ogg", "e40_f1e20e88.ogg", "e41_103c5fcc.ogg", "e41_237d1a10.ogg", "e41_2468c05e.ogg", "e41_6ef95ad7.ogg", "e41_bc2bafdc.ogg", "e41_c53ea04c.ogg", "e41_db718262.ogg", "e41_e9e1fae6.ogg", "e42_2cd4aed1.ogg", "e42_314e5094.ogg", "e42_3f8ab817.ogg", "e42_463376e8.ogg", "e42_731a01f0.ogg", "e42_75df1c2c.ogg", "e42_ae860d5d.ogg", "e42_dca45bd1.ogg", "e42_ea4ef11b.ogg", "e43_0bc5ffb1.ogg", "e43_143405b6.ogg", "e43_20080248.ogg", "e43_2b895a95.ogg", "e43_400c2285.ogg", "e43_7f5934f0.ogg", "e43_c9ebffd5.ogg", "e43_f3a579f0.ogg", "e44_02f713df.ogg", "e44_252769a5.ogg", "e44_7a264f1f.ogg", "e44_9d75c047.ogg", "e44_9ec7d2a2.ogg", "e44_b55ffe1d.ogg", "e44_cb5b277d.ogg", "e44_e6ea9098.ogg", "e45_092a2051.ogg", "e45_1bdf3189.ogg", "e45_203411ef.ogg", "e45_2b390c32.ogg", "e45_63cf3c3d.ogg", "e45_668fa904.ogg", "e45_847a99fa.ogg", "e45_85c4f628.ogg", "e45_c6eff064.ogg", "e46_36724ad7.ogg", "e46_564585a9.ogg", "e46_a6327868.ogg", "e46_ace59420.ogg", "e46_bd9d11ed.ogg", "e46_e5d2d1a9.ogg", "e46_ed9bae03.ogg", "e47_011c82de.ogg", "e47_20a8ae74.ogg", "e47_4a67f197.ogg", "e47_4eb6df13.ogg", "e47_73dc5a70.ogg", "e47_8908b9a4.ogg", "e47_8c5f91a3.ogg", "e47_cc04d15f.ogg", "e47_fa8af971.ogg", "e48_21ea955a.ogg", "e48_5b70151c.ogg", "e48_7c26302f.ogg", "e48_93d48f4c.ogg", "e48_992cc47d.ogg", "e48_a36445d2.ogg", "e48_c39c6e71.ogg", "e48_c93c3981.ogg", "e49_0326e24a.ogg", "e49_20ad9fae.ogg", "e49_746d4730.ogg", "e49_85be6d2c.ogg", "e49_866447f4.ogg", "e49_9baf3d1a.ogg", "e49_ca9b3839.ogg", "e49_eda966aa.ogg", "e49_fc85a164.ogg", "e50_0ad77d9c.ogg", "e50_25fe78a1.ogg", "e50_265f2f1e.ogg", "e50_2a1699aa.ogg", "e50_2f0c1df3.ogg", "e50_301f1b86.ogg", "e50_30b4869a.ogg", "e50_60e8c623.ogg", "e50_9924e4c3.ogg", "e50_9b2b9f62.ogg", "e50_a65a9226.ogg", "e50_b4eff3a2.ogg", "e50_bcb32581.ogg", "e50_be6105d5.ogg", "e50_c8551442.ogg", "e50_cb134dea.ogg", "e50_cf0c66c8.ogg", "e50_d5a0b2ed.ogg", "e51_05bb6909.ogg", "e51_15a82286.ogg", "e51_16c5fb9d.ogg", "e51_394a83b1.ogg", "e51_86e5c3a5.ogg", "e51_a52c7b35.ogg", "e51_de97df3e.ogg", "e51_ed79d679.ogg", "e51_fdcb3612.ogg", "e52_239d7aaf.ogg", "e52_998370b1.ogg", "e52_afc58b7d.ogg", "e52_d5ebed87.ogg", "e52_e4db6988.ogg", "e52_e7f1e335.ogg", "e52_ea3fa21d.ogg", "e52_f30721fd.ogg", "e53_183093e7.ogg", "e53_70ed9331.ogg", "e53_b00aa981.ogg", "e53_cc0e0d3f.ogg", "e53_d7c1a681.ogg", "e53_e1b52f75.ogg", "e53_fc2ad97c.ogg", "e54_0ef5531a.ogg", "e54_13138750.ogg", "e54_2a6cafa8.ogg", "e54_517921a3.ogg", "e54_56b63a89.ogg", "e54_664d0831.ogg", "e54_e372414c.ogg", "e54_e8911f43.ogg", "e55_0cb9eec4.ogg", "e55_2a76e023.ogg", "e55_2d4b7747.ogg", "e55_5e7cceb6.ogg", "e55_6907a75e.ogg", "e55_75fed202.ogg", "e55_b054e13a.ogg", "e55_bd511c36.ogg", "e55_ea52d33c.ogg", "e55_f81b3322.ogg", "e56_12323593.ogg", "e56_46974c8a.ogg", "e56_4aef63a3.ogg", "e56_5bf03121.ogg", "e56_6e268951.ogg", "e56_9697543c.ogg", "e56_de3fe1ec.ogg", "e56_ff9a49a1.ogg", "e57_22f365a0.ogg", "e57_401db94a.ogg", "e57_43d55932.ogg", "e57_5e796b36.ogg", "e57_6e71f4a1.ogg", "e57_83f205d8.ogg", "e57_be8869a8.ogg", "e58_01c897f5.ogg", "e58_1900253d.ogg", "e58_3b144768.ogg", "e58_5cd5820e.ogg", "e58_5f14d719.ogg", "e58_86be3b88.ogg", "e58_8a45bf4b.ogg", "e58_c9ed3f19.ogg", "e58_fcf4a148.ogg", "e59_0e12d9d2.ogg", "e59_129378f3.ogg", "e59_29b7797d.ogg", "e59_62d17a9d.ogg", "e59_6f9ddfbd.ogg", "e59_734f8cd5.ogg", "e59_7bdf1aae.ogg", "e59_aa27a2a5.ogg", "e59_c2d2c7e6.ogg", "e59_d67bfe10.ogg", "e60_005ef07d.ogg", "e60_0f4bf76d.ogg", "e60_1c213035.ogg", "e60_1d36a9fe.ogg", "e60_2a80028e.ogg", "e60_a1c6a532.ogg", "e60_bd0ad6d1.ogg", "e60_f767c455.ogg", "e61_28f042d7.ogg", "e61_3dfb2785.ogg", "e61_42eac583.ogg", "e61_6541a9d8.ogg", "e61_6716a460.ogg", "e61_6a2d8de4.ogg", "e61_782027ed.ogg", "e61_84b729d5.ogg", "e61_93b1a8c2.ogg", "e61_b775c07f.ogg", "e61_fabcadb5.ogg", "e62_105d4b2f.ogg", "e62_37d6599f.ogg", "e62_58a78418.ogg", "e62_5a06ce65.ogg", "e62_7071fe7c.ogg", "e62_819976a7.ogg", "e62_8c42f49e.ogg", "e62_9ccf6226.ogg", "e62_c6b10266.ogg", "e63_0f4d290b.ogg", "e63_43590ffc.ogg", "e63_44bb3af1.ogg", "e63_47596910.ogg", "e63_520fe284.ogg", "e63_975bd9f8.ogg", "e63_b18a13ee.ogg", "e64_54ac4390.ogg", "e64_89ec1748.ogg", "e64_9f2f1fb4.ogg", "e64_a019b65a.ogg", "e64_c300d67b.ogg", "e64_d5cf08af.ogg", "e64_e05b8416.ogg", "e64_e9f54924.ogg", "e64_f93402dc.ogg", "e65_285b4c84.ogg", "e65_5ce5555e.ogg", "e65_924c919a.ogg", "e65_a1830652.ogg", "e65_e4e6feb9.ogg", "e65_e789158c.ogg", "e65_f6e3c904.ogg", "e66_23a57086.ogg", "e66_5729d4de.ogg", "e66_60b97222.ogg", "e66_a02c0add.ogg", "e66_b3908a48.ogg", "e66_c45b3bcf.ogg", "e66_ddc85c34.ogg", "e66_edcb8165.ogg", "e67_0cd65258.ogg", "e67_3a0f99dc.ogg", "e67_41658cf5.ogg", "e67_5ab64074.ogg", "e67_6122037b.ogg", "e67_632ab002.ogg", "e67_885b79c3.ogg", "e67_a106d052.ogg", "e67_fe56d779.ogg", "e68_166255fc.ogg", "e68_1e32a316.ogg", "e68_45958dd7.ogg", "e68_5dcc2bd9.ogg", "e68_5ffdf2f1.ogg", "e68_81ef6578.ogg", "e68_99c4d58c.ogg", "e69_121c44e1.ogg", "e69_18e5230f.ogg", "e69_58b98d3b.ogg", "e69_c6dc91c5.ogg", "e69_fbc0a81e.ogg", "e69_ff34d931.ogg", "e70_04bba73b.ogg", "e70_2420f8b3.ogg", "e70_61aceeec.ogg", "e70_820b037a.ogg", "e70_88b5b5d8.ogg", "e70_8deef7f6.ogg", "e70_8ff74f20.ogg", "e70_d04d27bc.ogg", "e70_d58d390b.ogg", "e71_19272f8e.ogg", "e71_2676310e.ogg", "e71_27b086c7.ogg", "e71_45793ea7.ogg", "e71_490a2fac.ogg", "e71_4eeca3eb.ogg", "e71_4f455fba.ogg", "e71_56b8c6dd.ogg", "e71_6a12d37e.ogg", "e71_7173bdf2.ogg", "e71_8edcdee2.ogg", "e71_9f03a702.ogg", "e71_b2acc62a.ogg", "e71_badbcd08.ogg", "e71_d55c5fbe.ogg", "e71_d79a8816.ogg", "e71_f3a8d12c.ogg", "e71_f417f263.ogg", "e72_0f53f60e.ogg", "e72_1593de49.ogg", "e72_1e748bd4.ogg", "e72_2c5b7f39.ogg", "e72_2d6aee5d.ogg", "e72_4e074087.ogg", "e72_834fb5b3.ogg", "e72_92a6a420.ogg", "e72_9e0abba7.ogg", "e72_a80d3b24.ogg", "e72_b161e6da.ogg", "e72_b59d69b0.ogg", "e72_bc330e8e.ogg", "e72_cdf4e01c.ogg", "e72_d798b024.ogg", "e72_d7b2d553.ogg", "e72_dc9836a3.ogg", "e72_eed1f691.ogg", "e73_06585b4e.ogg", "e73_12d78f96.ogg", "e73_26fac3d4.ogg", "e73_2bf38d60.ogg", "e73_2e1cdb00.ogg", "e73_3abe3cdf.ogg", "e73_3b51e586.ogg", "e73_4e17f439.ogg", "e73_609d5d46.ogg", "e73_ad0b4860.ogg", "e73_bb1b0009.ogg", "e73_c3d0b21f.ogg", "e73_f455363d.ogg", "e74_1ab91878.ogg", "e74_1cd4e584.ogg", "e74_1f722afe.ogg", "e74_322d5ccb.ogg", "e74_493e1126.ogg", "e74_73be7e71.ogg", "e74_90c7291c.ogg", "e74_9fb91bad.ogg", "e74_acbcecfa.ogg", "e74_b5175096.ogg", "e74_be09f4a3.ogg", "e74_d793da16.ogg", "e74_de9fafb1.ogg", "e74_e4aa0e38.ogg", "e75_08bd9449.ogg", "e75_1923136b.ogg", "e75_28ed20ad.ogg", "e75_5d80abd1.ogg", "e75_7b0228bd.ogg", "e75_abb23c98.ogg", "e75_bf9a2968.ogg", "e75_c05b77e1.ogg", "e75_d0b01050.ogg", "e75_d9acb7ee.ogg", "e75_dda15b0e.ogg", "e75_ddc85c34.ogg", "e75_ebf0b253.ogg", "e76_13ee7c3d.ogg", "e76_1f571645.ogg", "e76_229381b8.ogg", "e76_2d514a07.ogg", "e76_2e0f91f3.ogg", "e76_3a85ee72.ogg", "e76_542d0132.ogg", "e76_719411f1.ogg", "e76_7f2bb377.ogg", "e76_a75b61a5.ogg", "e76_a840dc39.ogg", "e76_b261829e.ogg", "e76_be5fd837.ogg", "e76_dd57a6b1.ogg", "e76_edf452ae.ogg", "e77_0382d269.ogg", "e77_0744f4d6.ogg", "e77_0ff8a2f4.ogg", "e77_19047027.ogg", "e77_29c31738.ogg", "e77_3272e9c1.ogg", "e77_355e799e.ogg", "e77_43d6faad.ogg", "e77_6d3f1e80.ogg", "e77_850a922a.ogg", "e77_8cb7ac36.ogg", "e77_a8e94461.ogg", "e77_b14bd6a2.ogg", "e77_b3dbb5c4.ogg", "e77_c8940795.ogg", "e77_d50e196f.ogg", "e77_e147d457.ogg", "e77_e1f94709.ogg", "e77_e662e82f.ogg", "e77_f55b3022.ogg", "e78_034a1c13.ogg", "e78_10db2adf.ogg", "e78_171d5a8f.ogg", "e78_333893b0.ogg", "e78_3d6c1e51.ogg", "e78_4ebf493e.ogg", "e78_72214271.ogg", "e78_7d015f96.ogg", "e78_a266764a.ogg", "e78_a83898a1.ogg", "e78_db2abbf3.ogg", "e78_feb58b0b.ogg", "e79_0002e130.ogg", "e79_0ed10b11.ogg", "e79_1cb8a101.ogg", "e79_1fc18733.ogg", "e79_29d1a97f.ogg", "e79_2f978848.ogg", "e79_3a7fe224.ogg", "e79_4f5f8f3f.ogg", "e79_5c3f35f6.ogg", "e79_72ceae24.ogg", "e79_783dd4c0.ogg", "e79_9eabbaab.ogg", "e79_bc2bace1.ogg", "e79_de3bbe32.ogg", "e79_dfe64f99.ogg", "e79_ea355f35.ogg", "e80_0aef5041.ogg", "e80_15b9a8a4.ogg", "e80_2674aa55.ogg", "e80_2a23bf95.ogg", "e80_353c3309.ogg", "e80_435e8a8e.ogg", "e80_533bb6e0.ogg", "e80_7269842a.ogg", "e80_a1c2ce0e.ogg", "e80_b08b358f.ogg", "e80_bbca4ba4.ogg", "e80_c9ba148e.ogg", "e80_cf4f963f.ogg", "e80_d1abfca3.ogg", "e80_d7aeb687.ogg", "e80_d981f07d.ogg", "e80_ec0648a1.ogg", "e80_ee316951.ogg", "e80_f4e4d4c2.ogg", "e80_fb90ef05.ogg", "e81_16222e43.ogg", "e81_2929576b.ogg", "e81_48eae2a7.ogg", "e81_490b0626.ogg", "e81_55a0ce08.ogg", "e81_6d5a98f9.ogg", "e81_772df2c2.ogg", "e81_c0cd05db.ogg", "e81_cd01f84f.ogg", "e81_d0b6d8fb.ogg", "e81_dcff331f.ogg", "e81_dea360af.ogg", "e81_f7a3cd83.ogg", "e82_095ea769.ogg", "e82_12dc9001.ogg", "e82_148b70a4.ogg", "e82_168aa0ea.ogg", "e82_381294ac.ogg", "e82_4dba5e5a.ogg", "e82_513a0b57.ogg", "e82_58485053.ogg", "e82_5ce3625c.ogg", "e82_9ef40f03.ogg", "e82_bb977c4a.ogg", "e82_dfd4deaa.ogg", "e82_e7868029.ogg", "e82_ff6a6aab.ogg", "e83_2689fa39.ogg", "e83_3ac5cd4f.ogg", "e83_3e7e4ee3.ogg", "e83_49d503a0.ogg", "e83_4e3da075.ogg", "e83_62652ba0.ogg", "e83_84377801.ogg", "e83_a6649003.ogg", "e83_bc19c7e0.ogg", "e83_ed08624d.ogg", "e83_f8db3b38.ogg", "e83_f9befbcd.ogg", "e84_1b136d63.ogg", "e84_400537b2.ogg", "e84_5fc585d6.ogg", "e84_68935259.ogg", "e84_6a784d51.ogg", "e84_a3b78cd4.ogg", "e84_a598e5d1.ogg", "e84_ae276274.ogg", "e84_aea40dd1.ogg", "e84_c32c2a08.ogg", "e84_ce45fca4.ogg", "e85_00ccfbec.ogg", "e85_490807e7.ogg", "e85_4e4850d6.ogg", "e85_6c6bc4db.ogg", "e85_6d9e4e3f.ogg", "e85_93548a0a.ogg", "e85_96f7f3b9.ogg", "e85_b0eee65a.ogg", "e85_bd9c61c3.ogg", "e85_cd9c0674.ogg", "e85_e28d5d31.ogg", "e85_e65d5b7f.ogg", "e85_f9512aae.ogg", "e85_fb633fb9.ogg", "e86_1266f6a8.ogg", "e86_23a6cc35.ogg", "e86_42abc412.ogg", "e86_4a74d98e.ogg", "e86_7b974f22.ogg", "e86_906340f8.ogg", "e86_a4dbfee4.ogg", "e86_a817618e.ogg", "e86_e72113e9.ogg", "e86_f0cc84a6.ogg", "e86_f733a419.ogg", "e87_1f39cd0c.ogg", "e87_213e28fe.ogg", "e87_24902056.ogg", "e87_2b187e73.ogg", "e87_3386eab7.ogg", "e87_3f0def17.ogg", "e87_68d73d08.ogg", "e87_b74dbb95.ogg", "e87_c82bba8a.ogg", "e87_e38498d6.ogg", "e87_e7b711ed.ogg", "e87_f4922ff5.ogg", "e87_f9ef2de7.ogg", "e88_1007503b.ogg", "e88_11c37133.ogg", "e88_3e22627b.ogg", "e88_605713bf.ogg", "e88_63d337ca.ogg", "e88_8062e808.ogg", "e88_85dda33d.ogg", "e88_a5728163.ogg", "e88_a6f46336.ogg", "e88_bf172f8f.ogg", "e88_fb6fb1c8.ogg", "e89_14ded9ba.ogg", "e89_1e5cbb62.ogg", "e89_3c474e11.ogg", "e89_5427da28.ogg", "e89_5bbe0771.ogg", "e89_640beeba.ogg", "e89_706727c5.ogg", "e89_710377ab.ogg", "e89_742b872c.ogg", "e89_84a53466.ogg", "e89_93a24c6e.ogg", "e89_c0a48977.ogg", "e90_10e4cae4.ogg", "e90_14f95d3d.ogg", "e90_1ba78edc.ogg", "e90_1f5001c2.ogg", "e90_2023f8d5.ogg", "e90_3461e5eb.ogg", "e90_3ee89b90.ogg", "e90_42d0663f.ogg", "e90_56eac10f.ogg", "e90_797f5d11.ogg", "e90_7bbe5e81.ogg", "e90_7e23e181.ogg", "e90_93698a9b.ogg", "e90_9488d3d8.ogg", "e90_978d1b39.ogg", "e90_c08f303f.ogg", "e90_c21ba95e.ogg", "e90_c43850ae.ogg", "e90_c7d2c473.ogg", "e90_debf40d5.ogg", "e90_ef75095d.ogg", "e91_16b6257f.ogg", "e91_343c8136.ogg", "e91_445e4cbc.ogg", "e91_53963edc.ogg", "e91_5b461c52.ogg", "e91_6f6c9c5f.ogg", "e91_94333d40.ogg", "e91_a6715262.ogg", "e91_b286f825.ogg", "e91_ca8ec5e1.ogg", "e91_d5007b94.ogg", "e91_e24891f7.ogg", "e91_e9e6af98.ogg", "e91_ec1c8868.ogg", "e92_1a240c24.ogg", "e92_1c2a9cf4.ogg", "e92_3e4f71fc.ogg", "e92_4aacccc8.ogg", "e92_4c657102.ogg", "e92_5e944fbd.ogg", "e92_6ad61b16.ogg", "e92_6e769067.ogg", "e92_7c21c82e.ogg", "e92_a2e34649.ogg", "e92_fedf6e8c.ogg", "e93_201542d6.ogg", "e93_4563f74f.ogg", "e93_49ea3757.ogg", "e93_4b8911e2.ogg", "e93_5089e50e.ogg", "e93_570e20a9.ogg", "e93_7d82e6f2.ogg", "e93_8a3cdbf4.ogg", "e93_a279b7c1.ogg", "e93_a926c031.ogg", "e93_bc9dd969.ogg", "e94_0054f34b.ogg", "e94_07eaf08c.ogg", "e94_5147cedc.ogg", "e94_5a660125.ogg", "e94_70b782ce.ogg", "e94_85081d4b.ogg", "e94_b7c029d4.ogg", "e94_c7de0b8c.ogg", "e94_e559ea02.ogg", "e94_e6d19f2e.ogg", "e94_fec0fbb9.ogg", "e95_0a1ef228.ogg", "e95_18505622.ogg", "e95_2debcf12.ogg", "e95_80b0148e.ogg", "e95_817b4c20.ogg", "e95_83712cf6.ogg", "e95_917d3d1c.ogg", "e95_9b3c8133.ogg", "e95_a22575ab.ogg", "e95_ad9065e5.ogg", "e95_b5b91bac.ogg", "e95_bf8400ea.ogg", "e95_f1b1c9b5.ogg", "e96_0172100f.ogg", "e96_2f99a390.ogg", "e96_3b5df937.ogg", "e96_56e84cc5.ogg", "e96_7ef5a4ac.ogg", "e96_88fccd48.ogg", "e96_bb96c179.ogg", "e96_e101c7ec.ogg", "e96_e36fe680.ogg", "e96_f33d0c7f.ogg", "e96_fa4ef009.ogg", "e97_059ef118.ogg", "e97_1a98653e.ogg", "e97_3d0afff3.ogg", "e97_414beda8.ogg", "e97_48a103c6.ogg", "e97_61eb90ab.ogg", "e97_7b2128e9.ogg", "e97_9e3d2242.ogg", "e97_b4492842.ogg", "e97_c5bdb0b6.ogg", "e97_df36e7ea.ogg", "e97_f89f9606.ogg", "e98_0195f526.ogg", "e98_139c2e42.ogg", "e98_265ef59e.ogg", "e98_36ace249.ogg", "e98_42083083.ogg", "e98_54b57c26.ogg", "e98_83bf66e4.ogg", "e98_9fbfde6a.ogg", "e98_b5679dd4.ogg", "e98_bc9aadcb.ogg", "e98_c502b113.ogg", "e99_2698409f.ogg", "e99_34e63e06.ogg", "e99_4967fe0f.ogg", "e99_573c5074.ogg", "e99_9b44d02a.ogg", "e99_afa2a2b7.ogg", "e99_b9a5591f.ogg", "e99_c6f73ca7.ogg", "e99_cd76df42.ogg", "e99_d966d521.ogg", "e99_e93673ef.ogg", "e99_eaba4b5d.ogg", "e99_f2d3ffec.ogg", "f01_02.ogg", "f01_03.ogg", "f01_04.ogg", "f01_05.ogg", "f01_06.ogg", "f01_07.ogg", "f01_08.ogg", "f02_02.ogg", "f02_03.ogg", "f02_04.ogg", "f02_05.ogg", "f02_06.ogg", "f02_07.ogg", "f02_08.ogg", "f02_09.ogg", "f03_02.ogg", "f03_03.ogg", "f03_04.ogg", "f03_05.ogg", "f03_06.ogg", "f03_07.ogg", "f03_08.ogg", "f03_09.ogg", "f04_02.ogg", "f04_03.ogg", "f04_04.ogg", "f04_05.ogg", "f04_06.ogg", "f04_07.ogg", "f04_08.ogg", "f04_09.ogg", "f04_10.ogg", "f04_11.ogg", "f05_02.ogg", "f05_03.ogg", "f05_04.ogg", "f05_05.ogg", "f05_06.ogg", "f05_07.ogg", "f05_08.ogg", "f05_09.ogg", "f05_10.ogg", "f05_11.ogg", "f05_12.ogg"];
+window.arVoix = function (prefix, dir) {
+  try {
+    var L = window.__arVoixList, vus = window.__arVoixVus || (window.__arVoixVus = {});
+    L.forEach(function (n) {
+      if (n.indexOf(prefix) !== 0 || vus[n]) return;
+      vus[n] = 1;
+      fetch('voix/' + n).then(function (r) { return r.ok ? r.arrayBuffer() : null; }).then(function (b) {
+        if (!b) { vus[n] = 0; return; }
+        try { FS.mkdirTree(dir); } catch (e) {}
+        try { FS.writeFile(dir + '/' + n, new Uint8Array(b)); } catch (e) { vus[n] = 0; console.warn('voix', n, e); }
+      }).catch(function () { vus[n] = 0; });
+    });
+  } catch (e) { console.warn('arVoix', e); }
+};
+</script><script>/* ar-scroll v1 */
+(function(){ function z(){ try { if (window.pageYOffset || window.pageXOffset) window.scrollTo(0,0); } catch(e){} }
+ ['resize','orientationchange','scroll'].forEach(function(k){ window.addEventListener(k, z, {passive:true}); });
+ if (window.visualViewport) visualViewport.addEventListener('resize', z);
+ setInterval(z, 1000); })();
+</script><script>/* ar-ios-ume v1 */
 (function () {
   // Debloque « Touchez pour jouer » sur iPhone : iOS n'envoie pas de click a window
   // pour un toucher sur un element non cliquable, alors on ecoute le toucher lui-meme.
@@ -41,7 +189,7 @@
   window.__arIos = function () { return {geste: geste, ctx: ctxs.length}; };
 })();
 </script><script>(function(){var P='https://pygame-web'+'.github.io/',L=new URL('pgw/',document.baseURI).href,BASE=new URL('./',document.baseURI).href,of=window.fetch.bind(window);
-var CH={"app.tar.gz": 25, "pgw/cdn/0.9.3/cpython312/main.data": 3, "pgw/cdn/0.9.3/cpython312/main.wasm": 6},mem={};
+var CH={"app.tar.gz": 27, "pgw/cdn/0.9.3/cpython312/main.data": 3, "pgw/cdn/0.9.3/cpython312/main.wasm": 6},mem={};
 function loc(u){if(typeof u==='string'&&u.indexOf(P)===0)return L+u.slice(P.length);return u;}
 function key(u){try{var a=new URL(u,document.baseURI).href.split('?')[0];if(a.indexOf(BASE)!==0)return null;var k=a.slice(BASE.length);return CH[k]?k:null;}catch(e){return null;}}
 function asm(k){if(!mem[k]){var ps=[];for(var i=0;i<CH[k];i++){ps.push(of(BASE+k+'.part'+('00'+i).slice(-3)).then(function(r){if(!r.ok)throw new Error('morceau '+r.url);return r.arrayBuffer();}));}
@@ -57,13 +205,13 @@ X.send=function(b){if(this.__ck){var x=this,k=x.__ck;x.__ck=null;asm(k).then(fun
 })();</script><script src="./pgw/cdn/0.9.3/pythons.js" type=module id="site" data-python="python3.12" data-LINES=42 data-COLUMNS=132 data-os="vtx,snd,gui" async defer>#<!--
 
 print("""
-Loading Arène des Origines from app.apk
+Loading Arènes des Origines from app.apk
     Pygbag Version : 0.9.3
     Template Version : 0.9.3
     Python  : 3.12
     CDN URL : ./pgw/cdn/0.9.3/
     Screen  : 1280x720
-    Title   : Arène des Origines
+    Title   : Arènes des Origines
     Folder  : app
     Authors : pgw
     SPDX-License-Identifier: cookiecutter.spdx
@@ -234,7 +382,7 @@ function show_infobox() {
 
 </script>
 
-    <title>Arène des Origines</title>
+    <title>Arènes des Origines</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -265,6 +413,10 @@ function show_infobox() {
       @media (orientation: portrait) and (max-width: 900px) { #tourne { display:flex; } }
     
       #infobox { cursor:pointer; -webkit-tap-highlight-color: transparent; }
+
+      /* ar-diag v1 : le jeu reste colle a l'ecran meme si la page defile (iPhone) */
+      html, body { position:fixed !important; inset:0 !important; width:100% !important; height:100% !important; margin:0 !important; }
+      canvas#canvas { position:fixed !important; }
 </style>
 
 
@@ -427,12 +579,12 @@ function show_infobox() {
       window.addEventListener('load', function () {
         setTimeout(function () {
           if (!window.caches) return;
-          caches.open('arene-' + '58ca93f853').then(function (c) {
-            ["app.tar.gz.part000", "app.tar.gz.part001", "app.tar.gz.part002", "app.tar.gz.part003", "app.tar.gz.part004", "app.tar.gz.part005", "app.tar.gz.part006", "app.tar.gz.part007", "app.tar.gz.part008", "app.tar.gz.part009", "app.tar.gz.part010", "app.tar.gz.part011", "app.tar.gz.part012", "app.tar.gz.part013", "app.tar.gz.part014", "app.tar.gz.part015", "app.tar.gz.part016", "app.tar.gz.part017", "app.tar.gz.part018", "app.tar.gz.part019", "app.tar.gz.part020", "app.tar.gz.part021", "app.tar.gz.part022", "app.tar.gz.part023", "app.tar.gz.part024", "pgw/cdn/0.9.3/cpython312/main.data.part000", "pgw/cdn/0.9.3/cpython312/main.data.part001", "pgw/cdn/0.9.3/cpython312/main.data.part002", "pgw/cdn/0.9.3/cpython312/main.js", "pgw/cdn/0.9.3/cpython312/main.wasm.part000", "pgw/cdn/0.9.3/cpython312/main.wasm.part001", "pgw/cdn/0.9.3/cpython312/main.wasm.part002", "pgw/cdn/0.9.3/cpython312/main.wasm.part003", "pgw/cdn/0.9.3/cpython312/main.wasm.part004", "pgw/cdn/0.9.3/cpython312/main.wasm.part005", "pgw/cdn/0.9.3/cpythonrc.py", "pgw/cdn/0.9.3/empty.html", "pgw/cdn/0.9.3/empty.ogg", "pgw/cdn/0.9.3/pythons.js", "pgw/cdn/cp312/pygame_ce-2.5.7-cp312-cp312-wasm32_bi_emscripten.whl", "pgw/cdn/index-0.9.3-cp312.json", "pgw/cdn/vt/xterm-addon-image.js", "pgw/cdn/vt/xterm.css", "pgw/cdn/vt/xterm.js", "pgw/cdn/vtx.js"].forEach(function (u) {
+          caches.open('arene-' + '3dd7f886f7').then(function (c) {
+            ["app.tar.gz.part000", "app.tar.gz.part001", "app.tar.gz.part002", "app.tar.gz.part003", "app.tar.gz.part004", "app.tar.gz.part005", "app.tar.gz.part006", "app.tar.gz.part007", "app.tar.gz.part008", "app.tar.gz.part009", "app.tar.gz.part010", "app.tar.gz.part011", "app.tar.gz.part012", "app.tar.gz.part013", "app.tar.gz.part014", "app.tar.gz.part015", "app.tar.gz.part016", "app.tar.gz.part017", "app.tar.gz.part018", "app.tar.gz.part019", "app.tar.gz.part020", "app.tar.gz.part021", "app.tar.gz.part022", "app.tar.gz.part023", "app.tar.gz.part024", "app.tar.gz.part025", "app.tar.gz.part026", "pgw/cdn/0.9.3/cpython312/main.data.part000", "pgw/cdn/0.9.3/cpython312/main.data.part001", "pgw/cdn/0.9.3/cpython312/main.data.part002", "pgw/cdn/0.9.3/cpython312/main.js", "pgw/cdn/0.9.3/cpython312/main.wasm.part000", "pgw/cdn/0.9.3/cpython312/main.wasm.part001", "pgw/cdn/0.9.3/cpython312/main.wasm.part002", "pgw/cdn/0.9.3/cpython312/main.wasm.part003", "pgw/cdn/0.9.3/cpython312/main.wasm.part004", "pgw/cdn/0.9.3/cpython312/main.wasm.part005", "pgw/cdn/0.9.3/cpythonrc.py", "pgw/cdn/0.9.3/empty.html", "pgw/cdn/0.9.3/empty.ogg", "pgw/cdn/0.9.3/pythons.js", "pgw/cdn/cp312/pygame_ce-2.5.7-cp312-cp312-wasm32_bi_emscripten.whl", "pgw/cdn/index-0.9.3-cp312.json", "pgw/cdn/vt/xterm-addon-image.js", "pgw/cdn/vt/xterm.css", "pgw/cdn/vt/xterm.js", "pgw/cdn/vtx.js"].forEach(function (u) {
               c.match(u).then(function (m) { if (!m) c.add(u).catch(function () {}); });
             });
           });
-        }, 25000);
+        }, 60000);
       });
     }
     </script>
