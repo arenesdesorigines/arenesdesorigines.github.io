@@ -1,0 +1,5 @@
+{
+ "en_ligne_ouvert": false,
+ "etage_max_ouvert": 39,
+ "_aide": "Lu par le jeu Arènes des Origines. en_ligne_ouvert: true = mode en ligne ouvert pour tout le monde. etage_max_ouvert = dernier étage jouable sans code d'accès. Le code reste valable dans tous les cas."
+}
