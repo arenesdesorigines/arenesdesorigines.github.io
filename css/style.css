@@ -269,3 +269,5 @@ footer a{color:var(--muted)}
 .lore p{margin:0;line-height:1.5}
 .lore .lore-etage{margin-top:6px;font-size:.88em;color:var(--cyan)}
 @media (min-width:1241px) and (max-width:1440px){.menu{gap:0}.menu a{padding:8px 6px;font-size:.84rem}}
+
+.historique{margin-top:18px}.historique>summary{cursor:pointer;font-weight:700;color:var(--gold);padding:12px 0;min-height:44px}

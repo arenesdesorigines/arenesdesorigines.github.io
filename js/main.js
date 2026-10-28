@@ -4,7 +4,7 @@
    Dès qu'une adresse https est renseignée, le bouton et son badge deviennent actifs tout seuls.
    Pour l'APK, le plus simple : créer une « Release » sur ce dépôt GitHub, y joindre le fichier
    (ex. arene-des-origines.apk) et coller ici :
-   https://github.com/binyamine555-bot/Ar-ne-des-origines/releases/latest/download/arene-des-origines.apk */
+   https://github.com/<compte>/<depot>/releases/latest/download/arene-des-origines.apk */
 const DOWNLOADS = {
   apk: "",
   play: "",
