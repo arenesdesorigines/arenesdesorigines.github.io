@@ -275,3 +275,19 @@ footer a{color:var(--muted)}
 /* godot-cartes : vignettes = écran de sélection du jeu Godot (halo compris) */
 .f-img img{left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;filter:none;border-radius:12px}
 #fiche-dlg .fd-img img{filter:none;border-radius:16px}
+
+/* Nouveautés / journal (30 oct. 2026) */
+#nouveautes .journal{margin-top:8px}
+#nouveautes .journal header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:8px}
+#nouveautes .journal time{font:700 .8rem/1.2 system-ui,sans-serif;color:var(--cyan);letter-spacing:.12em;text-transform:uppercase}
+#nouveautes .journal h3{margin:0;font-family:var(--titre);color:var(--gold)}
+#nouveautes .journal ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+#nouveautes .journal li{line-height:1.5}
+#nouveautes .journal li .badge{margin-right:6px;vertical-align:middle}
+#nouveautes .journal-sign{text-align:right;font-style:italic;margin:14px 0 0}
+#nouveautes .sous-titre{font-family:var(--titre);color:var(--gold);margin:34px 0 6px;font-size:1.35rem}
+.shorts{list-style:none;padding:0;margin:12px 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.short-lien{display:flex;align-items:center;gap:12px;min-height:56px;padding:12px 14px;border-radius:12px;border:1px solid var(--line2);background:rgba(23,16,47,.75);color:var(--txt);text-decoration:none;font-weight:600;line-height:1.35;transition:border-color .15s,color .15s}
+.short-lien:hover,.short-lien:focus-visible{border-color:var(--gold);color:var(--gold)}
+.short-play{flex:0 0 34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#e62117;color:#fff;font-size:.8rem}
+@media (min-width:1000px){#nouveautes .galerie,#galerie .galerie{grid-template-columns:repeat(3,minmax(0,1fr))}}
