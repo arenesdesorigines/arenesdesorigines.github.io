@@ -57,13 +57,11 @@
       <p>100 étages, un seul sommet. Gravis la Tour en Mode Histoire, affronte 29 combattants uniques et crée le tien. Joue à deux sur le même téléphone, en Wi-Fi local, ou en ligne avec tes amis (chat et défis, en test), et lance un tournoi. En français, anglais, espagnol, allemand, italien et portugais.</p>
     </div>
     <div class="hero-video" id="bande-annonce">
-      <div class="video-cadre">
-        <video id="trailer" preload="none" playsinline poster="img/affiche_v2.webp" width="960" height="540" data-parties="video/v2/parties.json" data-repli="video/bande-annonce.mp4" aria-label="Bande-annonce d'Arènes des Origines">
-          <source src="video/bande-annonce.mp4" type="video/mp4">
-          Ton navigateur ne lit pas la vidéo : <a href="video/bande-annonce.mp4">télécharger la bande-annonce</a>.
-        </video>
-        <button class="video-play" id="trailerPlay" type="button" aria-label="Lire la bande-annonce"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></span><em>Nouvelle bande-annonce · 1 min 11</em></button>
+      <div class="video-cadre yt" id="trailerYT" data-yt="o9HrrdnUfYA">
+        <img class="yt-affiche" src="img/affiche_v2.webp" width="960" height="540" alt="Bande-annonce d'Arènes des Origines : Kaldrin contre Nivran" decoding="async">
+        <button class="video-play" id="trailerPlay" type="button" aria-label="Lire la bande-annonce officielle (YouTube)"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></span><em>Bande-annonce officielle · Bientôt sur Android</em></button>
       </div>
+      <p class="yt-lien"><a href="https://www.youtube.com/watch?v=o9HrrdnUfYA" target="_blank" rel="noopener">Voir la bande-annonce sur YouTube</a></p>
     </div>
     <div class="hero-actions">
       <div class="cta">
@@ -177,7 +175,7 @@ footer .reseaux .rs{min-width:40px;min-height:40px;color:var(--muted)}
       <div class="carte store"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#0f1b2e"/><path d="M19 12v40l24-20z" fill="#00d2ff"/><path d="M19 12l24 20 7-6.5z" fill="#00f076"/><path d="M19 52l24-20 7 6.5z" fill="#ff3d57"/><path d="M43 32l7-6.5 6 3.6a3.7 3.7 0 0 1 0 5.8l-6 3.6z" fill="#ffd000"/></svg><div><h3>Google Play <span class="badge soon" data-badge="play">Bientôt</span></h3><p>Publication sur le Play Store prévue après la période de test. Aucune date n'est annoncée.</p><a href="#amelioration" data-dl="play" class="btn sec" style="margin-top:10px" hidden>Google Play</a></div></div>
       <div class="carte store"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#2b6bff"/><rect x="21" y="10" width="22" height="44" rx="5" fill="none" stroke="#fff" stroke-width="3.4"/><circle cx="32" cy="48" r="2.6" fill="#fff"/><path d="M27 24h10M27 31h10" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg><div><h3>App Store (iOS) <span class="badge soon" data-badge="appstore">Plus tard</span></h3><p>Version iPhone prévue avec le nouveau moteur (d'abord jouable dans le navigateur). Voir les prochaines étapes.</p><a href="#amelioration" data-dl="appstore" class="btn sec" style="margin-top:10px" hidden>App Store</a></div></div>
     </div>
-    <p class="note"><b>État actuel :</b> la nouvelle version du jeu (moteur Godot) est en test. Le jeu n'est pas encore sur les stores. Pour être prévenu de la sortie ou participer aux tests, écris-moi via la section <a href="#amelioration">Contact</a>.</p>
+    <p class="note"><b>État actuel :</b> la nouvelle version du jeu (moteur Godot) est en test. Le jeu n'est pas encore sur les stores. Pour être prévenu de la sortie, inscris-toi dans la section <a href="#inscription">Être prévenu</a>.</p>
   </div>
 </section>
 
@@ -238,6 +236,14 @@ footer .reseaux .rs{min-width:40px;min-height:40px;color:var(--muted)}
     <h2><small>Journal de développement</small>Nouveautés</h2>
     <p class="lead">Où en est le jeu, au jour le jour. Tout ce qui est marqué « en préparation » ou « en test » n'est <b>pas encore disponible</b> : ça arrivera dans une prochaine version, quand ce sera prêt.</p>
     <article class="carte journal">
+      <header><time datetime="2026-10-31">31 oct. 2026</time><h3>Les cinématiques redessinées et la bande-annonce</h3></header>
+      <ul>
+        <li><span class="badge ok">Nouveau</span> <b>La bande-annonce officielle est sortie !</b> Regarde-la <a href="#bande-annonce">en haut de la page</a> ou sur <a href="https://www.youtube.com/watch?v=o9HrrdnUfYA" target="_blank" rel="noopener">YouTube</a>.</li>
+        <li><span class="badge test">Arrive avec le jeu</span> <b>Toutes les cinématiques des 39 premiers étages du Mode Histoire ont été redessinées</b> avec les nouveaux combattants. Quelques plans <a href="#cinematiques">juste en dessous</a>, sans rien dévoiler de l'histoire.</li>
+      </ul>
+      <p class="note journal-sign">L'équipe Arènes des Origines</p>
+    </article>
+    <article class="carte journal">
       <header><time datetime="2026-10-30">30 oct. 2026</time><h3>Les 29 combattants changent de visage</h3></header>
       <ul>
         <li><span class="badge test">En préparation</span> <b>Nouveaux designs des 29 combattants</b> : chacun a été entièrement redessiné. Tu peux déjà les voir dans la <a href="#personnages">galerie des combattants</a>.</li>
@@ -250,12 +256,17 @@ footer .reseaux .rs{min-width:40px;min-height:40px;color:var(--muted)}
       </ul>
       <p class="note journal-sign">L'équipe Arènes des Origines</p>
     </article>
-    <h3 class="sous-titre" id="cinematiques">Mode Histoire : les cinématiques refaites</h3>
-    <p class="note">Premières images des nouvelles cinématiques, redessinées avec les nouveaux combattants. Refonte en cours.</p>
-    <div class="galerie">
-<figure><button class="shot" type="button" data-full="img/cinematiques/f04-archives.webp" data-cap="Étage 4 : le héros rejoint Nivran dans les archives gelées de la Tour."><img src="img/cinematiques/f04-archives-640.webp" width="640" height="360" alt="Étage 4 : le héros rejoint Nivran dans les archives gelées de la Tour." srcset="img/cinematiques/f04-archives-640.webp 640w, img/cinematiques/f04-archives.webp 1280w" sizes="(max-width:620px) 92vw, 400px" loading="lazy" decoding="async"></button><figcaption>Étage 4 : le héros rejoint Nivran dans les archives gelées de la Tour.</figcaption></figure>
-<figure><button class="shot" type="button" data-full="img/cinematiques/f04-nivran.webp" data-cap="Étage 4 : Nivran, le Veilleur de Glace, dans son nouveau design."><img src="img/cinematiques/f04-nivran-640.webp" width="640" height="360" alt="Étage 4 : Nivran, le Veilleur de Glace, dans son nouveau design." srcset="img/cinematiques/f04-nivran-640.webp 640w, img/cinematiques/f04-nivran.webp 1280w" sizes="(max-width:620px) 92vw, 400px" loading="lazy" decoding="async"></button><figcaption>Étage 4 : Nivran, le Veilleur de Glace, dans son nouveau design.</figcaption></figure>
-<figure><button class="shot" type="button" data-full="img/cinematiques/intro-choc.webp" data-cap="Introduction : Kaldrin et Nivran, le feu contre la glace."><img src="img/cinematiques/intro-choc-640.webp" width="640" height="360" alt="Introduction : Kaldrin et Nivran, le feu contre la glace." srcset="img/cinematiques/intro-choc-640.webp 640w, img/cinematiques/intro-choc.webp 1280w" sizes="(max-width:620px) 92vw, 400px" loading="lazy" decoding="async"></button><figcaption>Introduction : Kaldrin et Nivran, le feu contre la glace.</figcaption></figure>
+    <h3 class="sous-titre" id="cinematiques">Mode Histoire : les cinématiques redessinées</h3>
+    <p class="note">Les cinématiques des étages 1 à 39 ont toutes été redessinées avec les nouveaux combattants. En voici huit plans. Touche une image pour l'agrandir.</p>
+    <div class="galerie cine">
+<figure><button class="shot" type="button" data-full="img/cinematiques/f01-brutus.webp" data-cap="Étage 1, « Le Seuil » : Brutus, le gardien, passe à l'attaque."><img src="img/cinematiques/f01-brutus-640.webp" width="640" height="360" alt="Étage 1, « Le Seuil » : Brutus, le gardien, passe à l'attaque." srcset="img/cinematiques/f01-brutus-640.webp 640w, img/cinematiques/f01-brutus.webp 1280w" sizes="(max-width:620px) 82vw, (max-width:999px) 300px, 320px" loading="lazy" decoding="async"></button><figcaption>Étage 1, « Le Seuil » : Brutus, le gardien, passe à l'attaque.</figcaption></figure>
+<figure><button class="shot" type="button" data-full="img/cinematiques/f07-shadow.webp" data-cap="Étage 7, « Le Juge Silencieux » : Shadow attend dans l'ombre."><img src="img/cinematiques/f07-shadow-640.webp" width="640" height="360" alt="Étage 7, « Le Juge Silencieux » : Shadow attend dans l'ombre." srcset="img/cinematiques/f07-shadow-640.webp 640w, img/cinematiques/f07-shadow.webp 1280w" sizes="(max-width:620px) 82vw, (max-width:999px) 300px, 320px" loading="lazy" decoding="async"></button><figcaption>Étage 7, « Le Juge Silencieux » : Shadow attend dans l'ombre.</figcaption></figure>
+<figure><button class="shot" type="button" data-full="img/cinematiques/f08-ragnar.webp" data-cap="Étage 8, « Le Rire du Guerrier » : Ragnar barre l'escalier."><img src="img/cinematiques/f08-ragnar-640.webp" width="640" height="360" alt="Étage 8, « Le Rire du Guerrier » : Ragnar barre l'escalier." srcset="img/cinematiques/f08-ragnar-640.webp 640w, img/cinematiques/f08-ragnar.webp 1280w" sizes="(max-width:620px) 82vw, (max-width:999px) 300px, 320px" loading="lazy" decoding="async"></button><figcaption>Étage 8, « Le Rire du Guerrier » : Ragnar barre l'escalier.</figcaption></figure>
+<figure><button class="shot" type="button" data-full="img/cinematiques/f09-drak.webp" data-cap="Étage 9, « La Voix à Deux Tons » : Drak, dans la grande salle."><img src="img/cinematiques/f09-drak-640.webp" width="640" height="360" alt="Étage 9, « La Voix à Deux Tons » : Drak, dans la grande salle." srcset="img/cinematiques/f09-drak-640.webp 640w, img/cinematiques/f09-drak.webp 1280w" sizes="(max-width:620px) 82vw, (max-width:999px) 300px, 320px" loading="lazy" decoding="async"></button><figcaption>Étage 9, « La Voix à Deux Tons » : Drak, dans la grande salle.</figcaption></figure>
+<figure><button class="shot" type="button" data-full="img/cinematiques/f23-kaldrin.webp" data-cap="Étage 23, « La Voix du Trône » : Kaldrin, entouré de flammes."><img src="img/cinematiques/f23-kaldrin-640.webp" width="640" height="360" alt="Étage 23, « La Voix du Trône » : Kaldrin, entouré de flammes." srcset="img/cinematiques/f23-kaldrin-640.webp 640w, img/cinematiques/f23-kaldrin.webp 1280w" sizes="(max-width:620px) 82vw, (max-width:999px) 300px, 320px" loading="lazy" decoding="async"></button><figcaption>Étage 23, « La Voix du Trône » : Kaldrin, entouré de flammes.</figcaption></figure>
+<figure><button class="shot" type="button" data-full="img/cinematiques/f24-nivran.webp" data-cap="Étage 24, « Le Registre Ouvert » : Nivran dans la bibliothèque gelée."><img src="img/cinematiques/f24-nivran-640.webp" width="640" height="360" alt="Étage 24, « Le Registre Ouvert » : Nivran dans la bibliothèque gelée." srcset="img/cinematiques/f24-nivran-640.webp 640w, img/cinematiques/f24-nivran.webp 1280w" sizes="(max-width:620px) 82vw, (max-width:999px) 300px, 320px" loading="lazy" decoding="async"></button><figcaption>Étage 24, « Le Registre Ouvert » : Nivran dans la bibliothèque gelée.</figcaption></figure>
+<figure><button class="shot" type="button" data-full="img/cinematiques/f25-ashgar.webp" data-cap="Étage 25, « Le Public Silencieux » : Ashgar devant les anciens."><img src="img/cinematiques/f25-ashgar-640.webp" width="640" height="360" alt="Étage 25, « Le Public Silencieux » : Ashgar devant les anciens." srcset="img/cinematiques/f25-ashgar-640.webp 640w, img/cinematiques/f25-ashgar.webp 1280w" sizes="(max-width:620px) 82vw, (max-width:999px) 300px, 320px" loading="lazy" decoding="async"></button><figcaption>Étage 25, « Le Public Silencieux » : Ashgar devant les anciens.</figcaption></figure>
+<figure><button class="shot" type="button" data-full="img/cinematiques/f26-terra.webp" data-cap="Étage 26, « Ce qui Pousse » : Terra et les racines de la Tour."><img src="img/cinematiques/f26-terra-640.webp" width="640" height="360" alt="Étage 26, « Ce qui Pousse » : Terra et les racines de la Tour." srcset="img/cinematiques/f26-terra-640.webp 640w, img/cinematiques/f26-terra.webp 1280w" sizes="(max-width:620px) 82vw, (max-width:999px) 300px, 320px" loading="lazy" decoding="async"></button><figcaption>Étage 26, « Ce qui Pousse » : Terra et les racines de la Tour.</figcaption></figure>
     </div>
     <h3 class="sous-titre" id="videos">Les dernières vidéos</h3>
     <p class="note">Nos derniers Shorts sur YouTube.</p>

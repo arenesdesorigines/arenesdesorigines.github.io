@@ -94,7 +94,7 @@ const musique = (() => {
    - Safari / iPhone : lecture native du flux HLS (index.m3u8) ;
    - les autres navigateurs : les morceaux (init.mp4 + segNN.m4s) sont recollés ici en une vidéo.
    Si quelque chose échoue, on lit l'ancienne bande-annonce (data-repli). */
-function videoJoue() { const v = document.getElementById("trailer"); return v && !v.paused; }
+function videoJoue() { if (window.ytLancee) return true; const v = document.getElementById("trailer"); return v && !v.paused; }
 (() => {
   const v = document.getElementById("trailer"), p = document.getElementById("trailerPlay");
   if (!v) return;
@@ -190,4 +190,28 @@ function videoJoue() { const v = document.getElementById("trailer"); return v &&
     window.location.href = "mailto:arenedesorigines@gmail.com?subject=" + encodeURIComponent(sujet) + "&body=" + encodeURIComponent(corps);
     msg.textContent = "Ton application e-mail devrait s'ouvrir. Si rien ne se passe, écris à arenedesorigines@gmail.com.";
   });
+})();
+
+/* ---------- Bande-annonce officielle (YouTube) : rien n'est chargé chez YouTube avant le clic ---------- */
+(() => {
+  const c = document.getElementById("trailerYT");
+  if (!c) return;
+  const b = c.querySelector(".video-play");
+  const lancer = () => {
+    if (c.querySelector("iframe")) return;
+    const f = document.createElement("iframe");
+    f.src = "https://www.youtube-nocookie.com/embed/" + c.dataset.yt + "?autoplay=1&rel=0&playsinline=1";
+    f.title = "Arènes des Origines : bande-annonce officielle";
+    f.width = 960; f.height = 540;
+    f.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+    f.referrerPolicy = "strict-origin-when-cross-origin";
+    f.allowFullscreen = true;
+    window.ytLancee = true;
+    try { musique.pause(); } catch (e) {}
+    const img = c.querySelector(".yt-affiche");
+    if (img) img.remove();
+    if (b) b.remove();
+    c.appendChild(f);
+  };
+  if (b) b.addEventListener("click", lancer);
 })();
