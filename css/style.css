@@ -298,3 +298,10 @@ footer a{color:var(--muted)}
 .yt-lien{margin:.7em 0 0;text-align:center;font-size:.88rem}
 .yt-lien a{color:var(--muted)}
 @media (min-width:1000px){#nouveautes .galerie.cine{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* Nouveautés 1er nov. 2026 : sous-liste et image dans une entrée */
+#nouveautes .journal ul.journal-sous{list-style:disc;padding-left:1.3em;margin:8px 0 0;gap:6px}
+#nouveautes .journal-img{margin:16px auto 0;max-width:640px}
+#nouveautes .journal-img .shot{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in;border-radius:12px;overflow:hidden}
+#nouveautes .journal-img img{display:block;width:100%;height:auto}
+#nouveautes .journal-img figcaption{font-size:.85rem;color:var(--muted);text-align:center;margin-top:6px}
