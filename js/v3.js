@@ -45,4 +45,16 @@
   document.querySelectorAll("details").forEach(function(d){
     d.addEventListener("toggle", function(){ if (d.open) d.querySelectorAll('img[loading="lazy"]').forEach(function(i){ i.loading = "eager"; }); });
   });
+  // images sous la ligne de flottaison (loading="lazy") : filet de sécurité pour WebKit/iPhone,
+  // qui ne les déclenche pas toujours. On les passe en "eager" à l'approche de l'écran, et au plus tard
+  // peu après le chargement de la page (sauf celles des blocs repliés, gérées à l'ouverture ci-dessus).
+  (function(){
+    function charger(i){ if (i.loading === "lazy") i.loading = "eager"; }
+    var lz = [].slice.call(document.querySelectorAll('img[loading="lazy"]'));
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting) { charger(e.target); io.unobserve(e.target); } }); }, { rootMargin: "900px 900px" });
+      lz.forEach(function(i){ io.observe(i); });
+    }
+    window.addEventListener("load", function(){ setTimeout(function(){ lz.forEach(function(i){ if (!i.closest("details:not([open])")) charger(i); }); }, 1500); });
+  })();
 })();
