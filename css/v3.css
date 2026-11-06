@@ -181,3 +181,8 @@ img,svg,video{forced-color-adjust:none}
 .insc-ligne input{flex:1 1 240px;min-width:0;margin:0}
 .insc-ligne .btn{flex:0 0 auto;margin:0}
 @media (max-width:560px){.insc-ligne{flex-direction:column;gap:14px}.insc-ligne input,.insc-ligne .btn{flex:none;width:100%}}
+
+/* journal 6 nov. 2026 : 3 arènes */
+#nouveautes .journal-arenes{max-width:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#nouveautes .journal-arenes figure{margin:0}
+@media (max-width:620px){#nouveautes .journal-arenes{grid-template-columns:1fr}}
