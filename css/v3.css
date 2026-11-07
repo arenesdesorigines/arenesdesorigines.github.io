@@ -186,3 +186,10 @@ img,svg,video{forced-color-adjust:none}
 #nouveautes .journal-arenes{max-width:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 #nouveautes .journal-arenes figure{margin:0}
 @media (max-width:620px){#nouveautes .journal-arenes{grid-template-columns:1fr}}
+
+/* journal 7 nov. 2026 : 3 tenues (portraits 2:3) */
+#nouveautes .journal-tenues{max-width:700px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#nouveautes .journal-tenues figure{margin:0;min-width:0}
+#nouveautes .journal-tenues img{width:100%;height:auto;aspect-ratio:2/3;object-fit:cover;display:block}
+#nouveautes .journal-tenues figcaption{font-size:.8rem;line-height:1.25}
+@media (max-width:620px){#nouveautes .journal-tenues{gap:8px}#nouveautes .journal-tenues figcaption{font-size:.72rem}}
