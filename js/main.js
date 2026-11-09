@@ -1,28 +1,19 @@
 /* Arène des Origines · script unique, sans dépendance */
 
-/* ---------- Téléchargements : remplis ces adresses quand elles existent ----------
-   Dès qu'une adresse https est renseignée, le bouton et son badge deviennent actifs tout seuls.
-   Pour l'APK, le plus simple : créer une « Release » sur ce dépôt GitHub, y joindre le fichier
-   (ex. arene-des-origines.apk) et coller ici :
-   https://github.com/<compte>/<depot>/releases/latest/download/arene-des-origines.apk */
+/* ---------- Lien Google Play ----------
+   Le jour de la sortie, coller ici l'adresse de la fiche Google Play (https://play.google.com/store/apps/details?id=...). */
 const DOWNLOADS = {
-  apk: "",
-  play: "",
-  appstore: ""
+  play: ""
 };
 
 (() => {
-  const labels = {apk: "Télécharger l'APK", play: "Ouvrir Google Play", appstore: "Ouvrir l'App Store"};
-  let apk = false;
   for (const [cle, url] of Object.entries(DOWNLOADS)) {
     if (!/^https:\/\//.test(url)) continue;
     document.querySelectorAll('[data-dl="' + cle + '"]').forEach(b => {
-      b.href = url; b.textContent = labels[cle]; b.removeAttribute("aria-disabled"); b.hidden = false; b.classList.remove("sec"); b.rel = "noopener";
+      b.href = url; b.textContent = "Ouvrir Google Play"; b.removeAttribute("aria-disabled"); b.hidden = false; b.classList.remove("sec"); b.rel = "noopener";
     });
     document.querySelectorAll('[data-badge="' + cle + '"]').forEach(g => { g.textContent = "Disponible"; g.className = "badge ok"; });
-    if (cle === "apk") apk = true;
   }
-  if (apk) document.querySelectorAll("[data-hero-dl]").forEach(b => { b.textContent = "Télécharger l'APK"; });
 })();
 
 /* ---------- Menu sur téléphone ---------- */
@@ -89,58 +80,8 @@ const musique = (() => {
   return {pause() { if (!audio.paused) audio.pause(); }};
 })();
 
-/* ---------- Bande-annonce v2 : se charge seulement quand on appuie sur lecture ----------
-   La vidéo est découpée en morceaux de moins de 2,4 Mo (video/v2/, liste dans parties.json) :
-   - Safari / iPhone : lecture native du flux HLS (index.m3u8) ;
-   - les autres navigateurs : les morceaux (init.mp4 + segNN.m4s) sont recollés ici en une vidéo.
-   Si quelque chose échoue, on lit l'ancienne bande-annonce (data-repli). */
-function videoJoue() { if (window.ytLancee) return true; const v = document.getElementById("trailer"); return v && !v.paused; }
-(() => {
-  const v = document.getElementById("trailer"), p = document.getElementById("trailerPlay");
-  if (!v) return;
-  const lbl = p ? p.querySelector("em") : null, txt0 = lbl ? lbl.textContent : "";
-  let pret = !v.dataset.parties, enCours = false;
-  const dire = t => { if (lbl) lbl.textContent = t; };
-  const lancer = () => {
-    v.controls = true;
-    const r = v.play();
-    if (p) p.hidden = true;
-    if (r && r.catch) r.catch(() => { if (p) { p.hidden = false; dire("Prête ! Touche pour lancer"); } });
-  };
-  const charger = async () => {
-    if (pret) return lancer();
-    if (enCours) return;
-    enCours = true; dire("Chargement… 0 %");
-    try {
-      const base = v.dataset.parties.replace(/[^/]*$/, "");
-      const man = await (await fetch(v.dataset.parties, {cache: "no-cache"})).json();
-      if (man.hls && v.canPlayType("application/vnd.apple.mpegurl")) {
-        v.src = base + man.hls; pret = true; enCours = false; dire(txt0); return lancer();
-      }
-      const tot = man.parties.reduce((a, x) => a + x.taille, 0);
-      let fait = 0;
-      const morceaux = await Promise.all(man.parties.map(async x => {
-        const r = await fetch(base + x.fichier);
-        if (!r.ok) throw new Error("HTTP " + r.status);
-        const b = await r.blob();
-        if (b.size !== x.taille) throw new Error("taille");
-        fait += x.taille; dire("Chargement… " + Math.round(fait * 100 / tot) + " %");
-        return b;
-      }));
-      v.src = URL.createObjectURL(new Blob(morceaux, {type: "video/mp4"}));
-    } catch (e) {
-      v.src = v.dataset.repli || "video/bande-annonce.mp4";
-    }
-    pret = true; enCours = false; dire(txt0);
-    lancer();
-  };
-  if (p) p.addEventListener("click", charger);
-  v.addEventListener("error", () => {
-    const repli = v.dataset.repli || "video/bande-annonce.mp4";
-    if (v.dataset.parties && !v.src.endsWith(repli)) { v.src = repli; lancer(); }
-  });
-  v.addEventListener("play", () => { musique.pause(); if (p) p.hidden = true; });
-})();
+/* ---------- Bande-annonce : la musique du site se coupe quand la vidéo YouTube est lancée ---------- */
+function videoJoue() { return !!window.ytLancee; }
 
 /* ---------- Fiches des combattants ---------- */
 (() => {
@@ -202,7 +143,7 @@ function videoJoue() { if (window.ytLancee) return true; const v = document.getE
     const f = document.createElement("iframe");
     f.src = "https://www.youtube-nocookie.com/embed/" + c.dataset.yt + "?autoplay=1&rel=0&playsinline=1";
     f.title = "Arènes des Origines : bande-annonce officielle";
-    f.width = 960; f.height = 540;
+    f.width = 540; f.height = 960;
     f.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
     f.referrerPolicy = "strict-origin-when-cross-origin";
     f.allowFullscreen = true;

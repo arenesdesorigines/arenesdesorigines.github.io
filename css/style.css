@@ -28,8 +28,8 @@ section{position:relative;padding:84px 0;isolation:isolate}
 
 /* fonds : arènes du jeu sous un voile sombre (version légère sur téléphone) */
 .fond::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,var(--bg) 0,rgba(11,7,22,.62) 16%,rgba(11,7,22,.74) 84%,var(--bg) 100%),var(--img) center/cover no-repeat}
-.fond.f1{--img:url("../img/fonds/arene-1.webp")}.fond.f2{--img:url("../img/fonds/arene-2.webp")}.fond.f3{--img:url("../img/fonds/arene-3.webp")}.fond.f4{--img:url("../img/fonds/arene-4.webp")}.fond.f5{--img:url("../img/fonds/arene-5.webp")}
-@media (max-width:700px){.fond.f1{--img:url("../img/fonds/arene-1-640.webp")}.fond.f2{--img:url("../img/fonds/arene-2-640.webp")}.fond.f3{--img:url("../img/fonds/arene-3-640.webp")}.fond.f4{--img:url("../img/fonds/arene-4-640.webp")}.fond.f5{--img:url("../img/fonds/arene-5-640.webp")}}
+.fond.f1{--img:url("../img/fonds/arene-peinte-1.webp")}.fond.f2{--img:url("../img/fonds/arene-peinte-2.webp")}.fond.f3{--img:url("../img/fonds/arene-peinte-3.webp")}.fond.f4{--img:url("../img/fonds/arene-peinte-4.webp")}.fond.f5{--img:url("../img/fonds/arene-peinte-5.webp")}
+@media (max-width:700px){.fond.f1{--img:url("../img/fonds/arene-peinte-1-640.webp")}.fond.f2{--img:url("../img/fonds/arene-peinte-2-640.webp")}.fond.f3{--img:url("../img/fonds/arene-peinte-3-640.webp")}.fond.f4{--img:url("../img/fonds/arene-peinte-4-640.webp")}.fond.f5{--img:url("../img/fonds/arene-peinte-5-640.webp")}}
 .uni{background:radial-gradient(900px 500px at 85% 0,#2a145655,transparent 70%),radial-gradient(800px 500px at 0 100%,#10305a44,transparent 70%)}
 
 /* en-tête */
@@ -65,8 +65,8 @@ header.top{position:sticky;top:0;z-index:60;background:rgba(11,7,22,.86);backdro
 
 /* héros + bande-annonce */
 .hero{padding:56px 0 70px;overflow:hidden}
-.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(11,7,22,.35),rgba(11,7,22,.82) 70%,var(--bg)),url("../img/fonds/arene-1.webp") center/cover}
-@media (max-width:700px){.hero::before{background:linear-gradient(180deg,rgba(11,7,22,.45),rgba(11,7,22,.88) 60%,var(--bg)),url("../img/fonds/arene-1-640.webp") center/cover}}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(11,7,22,.35),rgba(11,7,22,.82) 70%,var(--bg)),url("../img/fonds/arene-peinte-1.webp") center/cover}
+@media (max-width:700px){.hero::before{background:linear-gradient(180deg,rgba(11,7,22,.45),rgba(11,7,22,.88) 60%,var(--bg)),url("../img/fonds/arene-peinte-1-640.webp") center/cover}}
 .hero .wrap{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);grid-template-areas:"texte video" "actions video";column-gap:44px;align-items:center}
 .hero-texte{grid-area:texte;align-self:end}
 .hero-actions{grid-area:actions;align-self:start}
@@ -305,3 +305,8 @@ footer a{color:var(--muted)}
 #nouveautes .journal-img .shot{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in;border-radius:12px;overflow:hidden}
 #nouveautes .journal-img img{display:block;width:100%;height:auto}
 #nouveautes .journal-img figcaption{font-size:.85rem;color:var(--muted);text-align:center;margin-top:6px}
+
+/* 10/11 : bande-annonce v2 (Short vertical 9:16) */
+.video-cadre.vertical{max-width:360px;margin-left:auto;margin-right:auto}
+.video-cadre.vertical .yt-affiche,.video-cadre.vertical iframe{aspect-ratio:9/16}
+@media (max-width:620px){.video-cadre.vertical{max-width:300px}}

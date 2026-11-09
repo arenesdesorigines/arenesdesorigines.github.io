@@ -41,11 +41,11 @@
     if (aud) ["play","pause"].forEach(function(ev){ aud.addEventListener(ev, majBulle); });
     rag.addEventListener("click", function(){ bulle.classList.add("parti"); rag.classList.add("touche"); setTimeout(function(){ bulle.hidden = true; }, 450); });
   }
-  // contenus repliés : leurs images se chargent dès l'ouverture (WebKit/iPhone ne les chargeait pas toujours en « lazy »)
+  // contenus repliés : leurs images se chargent dès l'ouverture (WebKit/Safari ne les chargeait pas toujours en « lazy »)
   document.querySelectorAll("details").forEach(function(d){
     d.addEventListener("toggle", function(){ if (d.open) d.querySelectorAll('img[loading="lazy"]').forEach(function(i){ i.loading = "eager"; }); });
   });
-  // images sous la ligne de flottaison (loading="lazy") : filet de sécurité pour WebKit/iPhone,
+  // images sous la ligne de flottaison (loading="lazy") : filet de sécurité pour WebKit/Safari,
   // qui ne les déclenche pas toujours. On les passe en "eager" à l'approche de l'écran, et au plus tard
   // peu après le chargement de la page (sauf celles des blocs repliés, gérées à l'ouverture ci-dessus).
   (function(){
