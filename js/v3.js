@@ -18,7 +18,7 @@
   // flèches des carrousels (ordinateur)
   document.querySelectorAll(".carrousel").forEach(function(c){
     var nav = document.createElement("div"); nav.className = "car-nav";
-    [["‹","Précédent",-1],["›","Suivant",1]].forEach(function(b){
+    ((document.documentElement.lang==="en") ? [["‹","Previous",-1],["›","Next",1]] : [["‹","Précédent",-1],["›","Suivant",1]]).forEach(function(b){
       var bt = document.createElement("button"); bt.type = "button"; bt.textContent = b[0]; bt.setAttribute("aria-label", b[1]);
       bt.addEventListener("click", function(){ c.scrollBy({left: b[2] * c.clientWidth * 0.9, behavior: reduit ? "auto" : "smooth"}); });
       nav.appendChild(bt);
@@ -37,7 +37,7 @@
   // bulle « Touche Ragnar pour le son » : texte selon l'état de la musique, disparaît au premier toucher de Ragnar
   var bulle = document.getElementById("bulleSon"), rag = document.querySelector(".ragnar3-btn"), aud = document.getElementById("bgMusic");
   if (bulle && rag) {
-    var majBulle = function(){ if (aud) bulle.textContent = aud.paused ? "🔊 Touche Ragnar pour le son" : "🔇 Touche Ragnar pour couper le son"; };
+    var majBulle = function(){ if (aud) bulle.textContent = (document.documentElement.lang==="en") ? (aud.paused ? "🔊 Tap Ragnar for sound" : "🔇 Tap Ragnar to mute") : (aud.paused ? "🔊 Touche Ragnar pour le son" : "🔇 Touche Ragnar pour couper le son"); };
     if (aud) ["play","pause"].forEach(function(ev){ aud.addEventListener(ev, majBulle); });
     rag.addEventListener("click", function(){ bulle.classList.add("parti"); rag.classList.add("touche"); setTimeout(function(){ bulle.hidden = true; }, 450); });
   }
