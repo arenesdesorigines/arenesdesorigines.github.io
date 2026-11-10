@@ -5,11 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arènes des Origines · Site officiel</title>
 <meta name="description" content="Arènes des Origines : jeu de combat mobile, bientôt sur Google Play. 29 combattants, 12 arènes, une Tour de 100 étages en Mode Histoire, et bientôt le jeu entre amis en Wi-Fi local. En français, anglais, espagnol, allemand, italien et portugais.">
+<link rel="canonical" href="https://arenesdesorigines.github.io/">
+<link rel="alternate" hreflang="fr" href="https://arenesdesorigines.github.io/">
+<link rel="alternate" hreflang="en" href="https://arenesdesorigines.github.io/en/">
+<link rel="alternate" hreflang="x-default" href="https://arenesdesorigines.github.io/">
 <meta name="theme-color" content="#0b0716">
 <meta name="color-scheme" content="dark only">
 <meta name="supported-color-schemes" content="dark only">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
+<meta property="og:locale:alternate" content="en_US">
 <meta property="og:title" content="Arènes des Origines · 100 étages, un seul sommet">
 <meta property="og:description" content="Jeu de combat mobile, bientôt sur Google Play : 29 combattants, 12 arènes, une Tour de 100 étages, et bientôt le jeu entre amis en Wi-Fi local.">
 <meta property="og:image" content="https://arenesdesorigines.github.io/img/og-arenes.jpg?v=2">
@@ -39,8 +44,8 @@ footer .reseaux .rs{min-width:40px;min-height:40px;color:var(--muted)}
 footer .reseaux .rs svg{color:inherit}
 </style>
 <link rel="stylesheet" href="css/v3.css?v=20261110">
-<script src="js/main.js?v=20261110" defer></script>
-<script src="js/v3.js?v=20261110" defer></script>
+<script src="js/main.js?v=20261110en" defer></script>
+<script src="js/v3.js?v=20261110en" defer></script>
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
@@ -66,6 +71,7 @@ footer .reseaux .rs svg{color:inherit}
  "url": "https://arenesdesorigines.github.io/"
 }
 </script>
+<style>.lang-switch{flex:none;display:flex;align-items:center;gap:2px;font:700 .8rem/1 system-ui,sans-serif;letter-spacing:.04em;color:#8f86a8}.lang-switch a{color:#cfc6e6;text-decoration:none;padding:7px 5px;border-radius:7px}.lang-switch a:hover{color:var(--gold)}.lang-switch a[aria-current]{color:var(--gold)}@media (max-width:420px){.lang-switch{font-size:.72rem}.lang-switch a{padding:6px 3px}}@media (min-width:1241px){.lang-switch span,.lang-switch a[aria-current]{display:none}.lang-switch a{padding:6px 4px;border:1px solid var(--line2)}}@media (min-width:1241px) and (max-width:1480px){.nav{gap:8px}.menu a{padding:8px 4px}}</style>
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
@@ -89,7 +95,8 @@ footer .reseaux .rs svg{color:inherit}
         <li><a href="#confidentialite">Confidentialité</a></li>
       </ul>
     </nav>
-    <button class="icon-btn" id="musicBtn" type="button" aria-pressed="false" aria-label="Activer la musique" title="Musique d'ambiance">🔇</button>
+    <div class="lang-switch" role="navigation" aria-label="Langue"><a href="./" hreflang="fr" lang="fr" aria-current="page">FR</a><span aria-hidden="true">|</span><a href="en/" hreflang="en" lang="en">EN</a></div>
+<button class="icon-btn" id="musicBtn" type="button" aria-pressed="false" aria-label="Activer la musique" title="Musique d'ambiance">🔇</button>
   </div>
 </header>
 <audio id="bgMusic" src="audio/musique.mp3" preload="none" loop></audio>
