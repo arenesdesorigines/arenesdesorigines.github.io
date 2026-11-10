@@ -45,12 +45,13 @@ const musique = (() => {
     const joue = !audio.paused;
     if (btn) {
       btn.setAttribute("aria-pressed", String(joue));
-      btn.setAttribute("aria-label", joue ? "Couper la musique" : "Activer la musique");
+      btn.setAttribute("aria-label", (document.documentElement.lang==="en") ? (joue ? "Mute the music" : "Play the music") : (joue ? "Couper la musique" : "Activer la musique"));
       btn.textContent = joue ? "🔊" : "🔇";
     }
     document.querySelectorAll(".art-music .mi").forEach(i => { i.textContent = joue ? "🔊" : "🔇"; });
-    if (note) note.textContent = joue ? "🔊 Musique activée · touche ici pour la couper"
-      : (voulu ? "🔇 Touche ici pour lancer la musique" : "🔇 Musique coupée · touche ici pour la relancer");
+    if (note) note.textContent = (document.documentElement.lang==="en") ? (joue ? "🔊 Music on · tap here to mute it" : (voulu ? "🔇 Tap here to start the music" : "🔇 Music off · tap here to turn it back on"))
+      : (joue ? "🔊 Musique activée · touche ici pour la couper"
+      : (voulu ? "🔇 Touche ici pour lancer la musique" : "🔇 Musique coupée · touche ici pour la relancer"));
   };
   const lancer = async () => { try { await audio.play(); } catch (e) {} maj(); };
   boutons.forEach(b => b.addEventListener("click", e => {
@@ -129,7 +130,7 @@ function videoJoue() { return !!window.ytLancee; }
     const sujet = "[Arène des Origines] " + d.get("type");
     const corps = "Pseudo : " + d.get("pseudo") + "\nType : " + d.get("type") + "\n\n" + d.get("details");
     window.location.href = "mailto:arenedesorigines@gmail.com?subject=" + encodeURIComponent(sujet) + "&body=" + encodeURIComponent(corps);
-    msg.textContent = "Ton application e-mail devrait s'ouvrir. Si rien ne se passe, écris à arenedesorigines@gmail.com.";
+    msg.textContent = (document.documentElement.lang==="en") ? "Your email app should open. If nothing happens, write to arenedesorigines@gmail.com." : "Ton application e-mail devrait s'ouvrir. Si rien ne se passe, écris à arenedesorigines@gmail.com.";
   });
 })();
 
@@ -142,7 +143,7 @@ function videoJoue() { return !!window.ytLancee; }
     if (c.querySelector("iframe")) return;
     const f = document.createElement("iframe");
     f.src = "https://www.youtube-nocookie.com/embed/" + c.dataset.yt + "?autoplay=1&rel=0&playsinline=1";
-    f.title = "Arènes des Origines : bande-annonce officielle";
+    f.title = (document.documentElement.lang==="en") ? "Arenas of Origins: official trailer" : "Arènes des Origines : bande-annonce officielle";
     f.width = 540; f.height = 960;
     f.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
     f.referrerPolicy = "strict-origin-when-cross-origin";
