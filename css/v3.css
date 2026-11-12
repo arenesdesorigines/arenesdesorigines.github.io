@@ -193,3 +193,9 @@ img,svg,video{forced-color-adjust:none}
 #nouveautes .journal-tenues img{width:100%;height:auto;aspect-ratio:2/3;object-fit:cover;display:block}
 #nouveautes .journal-tenues figcaption{font-size:.8rem;line-height:1.25}
 @media (max-width:620px){#nouveautes .journal-tenues{gap:8px}#nouveautes .journal-tenues figcaption{font-size:.72rem}}
+
+/* 12/11 : Ragnar du héros — le dessin s'arrête net à la taille (bord coupé) : le bas se fond, et plus d'air sous le menu */
+.ragnar3-btn img{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 4%,#000 68%,transparent 96%),linear-gradient(90deg,transparent 0,#000 8%,#000 96%,transparent 100%);-webkit-mask-composite:source-in;mask-image:linear-gradient(180deg,transparent 0,#000 4%,#000 68%,transparent 96%),linear-gradient(90deg,transparent 0,#000 8%,#000 96%,transparent 100%);mask-composite:intersect}
+.ragnar3{margin-top:14px}
+@media (min-width:701px){.hero3{padding-top:124px}}
+@media (max-width:700px){.ragnar3{margin-top:10px}}
