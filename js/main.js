@@ -3,16 +3,25 @@
 /* ---------- Lien Google Play ----------
    Le jour de la sortie, coller ici l'adresse de la fiche Google Play (https://play.google.com/store/apps/details?id=...). */
 const DOWNLOADS = {
-  play: ""
+  play: "https://play.google.com/store/apps/details?id=com.amar.arenedesorigines"
 };
 
 (() => {
   for (const [cle, url] of Object.entries(DOWNLOADS)) {
     if (!/^https:\/\//.test(url)) continue;
     document.querySelectorAll('[data-dl="' + cle + '"]').forEach(b => {
-      b.href = url; b.textContent = "Ouvrir Google Play"; b.removeAttribute("aria-disabled"); b.hidden = false; b.classList.remove("sec"); b.rel = "noopener";
+      b.href = url;
+      b.target = "_blank";
+      b.textContent = (document.documentElement.lang === "en") ? "Download on Google Play" : "Télécharger sur Google Play";
+      b.removeAttribute("aria-disabled");
+      b.hidden = false;
+      b.classList.remove("sec");
+      b.rel = "noopener";
     });
-    document.querySelectorAll('[data-badge="' + cle + '"]').forEach(g => { g.textContent = "Disponible"; g.className = "badge ok"; });
+    document.querySelectorAll('[data-badge="' + cle + '"]').forEach(g => {
+      g.textContent = (document.documentElement.lang === "en") ? "Available" : "Déjà disponible";
+      g.className = "badge ok";
+    });
   }
 })();
 
