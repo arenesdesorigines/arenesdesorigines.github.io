@@ -3,7 +3,8 @@
 /* ---------- Lien Google Play ----------
    Le jour de la sortie, coller ici l'adresse de la fiche Google Play (https://play.google.com/store/apps/details?id=...). */
 const DOWNLOADS = {
-  play: "https://play.google.com/store/apps/details?id=com.amar.arenedesorigines"
+  play: "https://play.google.com/store/apps/details?id=com.amar.arenedesorigines",
+  apple: "https://apps.apple.com/app/id6832243086"
 };
 
 (() => {
@@ -12,7 +13,12 @@ const DOWNLOADS = {
     document.querySelectorAll('[data-dl="' + cle + '"]').forEach(b => {
       b.href = url;
       b.target = "_blank";
-      b.textContent = (document.documentElement.lang === "en") ? "Download on Google Play" : "Télécharger sur Google Play";
+      const isApple = cle === "apple";
+      if (document.documentElement.lang === "en") {
+        b.textContent = isApple ? "Download on the App Store" : "Download on Google Play";
+      } else {
+        b.textContent = isApple ? "Télécharger sur l'App Store" : "Télécharger sur Google Play";
+      }
       b.removeAttribute("aria-disabled");
       b.hidden = false;
       b.classList.remove("sec");
