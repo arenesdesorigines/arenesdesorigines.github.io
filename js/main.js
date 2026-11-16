@@ -4,7 +4,7 @@
    Le jour de la sortie, coller ici l'adresse de la fiche Google Play (https://play.google.com/store/apps/details?id=...). */
 const DOWNLOADS = {
   play: "https://play.google.com/store/apps/details?id=com.amar.arenedesorigines",
-  apple: "https://apps.apple.com/app/id6832243086"
+  apple: "https://apps.apple.com/fr/app/ar%C3%A8nes-des-origines/id6832243086"
 };
 
 (() => {
