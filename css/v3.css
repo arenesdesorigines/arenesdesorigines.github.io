@@ -177,6 +177,27 @@ img,svg,video{forced-color-adjust:none}
   .hero3 .chips li{background:rgba(7,4,15,.82)}
 }
 /* 01/11 : formulaire « Sois le premier prévenu » — espace net entre le champ e-mail et le bouton */
+/* ===== Boutons Store (Apple & Google Play) Redesign ===== */
+.btn-store{display:inline-flex;align-items:center;gap:12px;padding:9px 18px;border-radius:14px;background:rgba(18,12,38,.85);border:1px solid rgba(255,255,255,.16);color:#fff;text-decoration:none;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.45);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background .2s ease;min-height:52px;box-sizing:border-box}
+.btn-store .store-ico{width:28px;height:28px;flex:none}
+.btn-store .store-txt{display:flex;flex-direction:column;text-align:left;line-height:1.15}
+.btn-store .store-sub{font-size:.62rem;letter-spacing:.12em;font-weight:700;color:#a49aba;text-transform:uppercase}
+.btn-store .store-name{font-size:1.1rem;font-weight:800;letter-spacing:-.01em;color:#fff}
+.btn-store.btn-google-play:hover{border-color:rgba(0,210,255,.8);background:rgba(22,14,50,.95);box-shadow:0 10px 28px rgba(0,210,255,.32),0 0 16px rgba(0,240,118,.15) inset;transform:translateY(-2px)}
+.btn-store.btn-app-store:hover{border-color:rgba(90,200,250,.8);background:rgba(22,14,50,.95);box-shadow:0 10px 28px rgba(90,200,250,.32),0 0 16px rgba(0,122,255,.15) inset;transform:translateY(-2px)}
+.btn-store:active{transform:scale(.98)}
+@media (max-width:700px){
+  .btn-store{padding:8px 12px;gap:8px;min-height:48px;flex:1 1 0;min-width:0}
+  .btn-store .store-ico{width:24px;height:24px}
+  .btn-store .store-sub{font-size:.54rem;letter-spacing:.08em}
+  .btn-store .store-name{font-size:.92rem}
+}
+@media (max-width:360px){
+  .btn-store{padding:6px 8px;gap:6px}
+  .btn-store .store-ico{width:20px;height:20px}
+  .btn-store .store-name{font-size:.84rem}
+}
+
 .insc-ligne{display:flex;flex-wrap:wrap;gap:16px;align-items:stretch}
 .insc-ligne input{flex:1 1 240px;min-width:0;margin:0}
 .insc-ligne .btn{flex:0 0 auto;margin:0}
