@@ -1,4 +1,4 @@
-/* v3 : apparitions douces, flèches des carrousels, bouton flottant « S'inscrire » */
+/* v3 : apparitions douces, flèches des carrousels, bouton flottant de téléchargement */
 (function(){
   "use strict";
   var reduit = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -25,14 +25,15 @@
     });
     c.parentNode.insertBefore(nav, c.nextSibling);
   });
-  // bouton flottant : visible après le héros, caché quand le formulaire est à l'écran
-  var cta = document.getElementById("ctaFlottant"), hero = document.getElementById("accueil"), insc = document.getElementById("inscription"), pied = document.querySelector("footer");
-  if (cta && hero && insc && "IntersectionObserver" in window) {
-    var etat = {hero:true, insc:false, pied:false};
-    var maj = function(){ cta.classList.toggle("vu", !etat.hero && !etat.insc && !etat.pied); };
-    new IntersectionObserver(function(es){ es.forEach(function(e){ var k = e.target === hero ? "hero" : (e.target === insc ? "insc" : "pied"); etat[k] = e.isIntersecting; }); maj(); }).observe(hero);
-    var io2 = new IntersectionObserver(function(es){ es.forEach(function(e){ var k = e.target === insc ? "insc" : "pied"; etat[k] = e.isIntersecting; }); maj(); });
-    io2.observe(insc); if (pied) io2.observe(pied);
+  // bouton flottant : visible après le héros, caché au pied de page
+  var cta = document.getElementById("ctaFlottant"), hero = document.getElementById("accueil"), pied = document.querySelector("footer");
+  if (cta && hero && "IntersectionObserver" in window) {
+    var etat = {hero:true, pied:false};
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ etat[e.target === hero ? "hero" : "pied"] = e.isIntersecting; });
+      cta.classList.toggle("vu", !etat.hero && !etat.pied);
+    });
+    io.observe(hero); if (pied) io.observe(pied);
   }
   // bulle « Touche Ragnar pour le son » : texte selon l'état de la musique, disparaît au premier toucher de Ragnar
   var bulle = document.getElementById("bulleSon"), rag = document.querySelector(".ragnar3-btn"), aud = document.getElementById("bgMusic");
