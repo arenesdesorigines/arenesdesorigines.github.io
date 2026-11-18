@@ -31,73 +31,55 @@ const DOWNLOADS = {
   }
 })();
 
-/* ---------- Menu sur téléphone ---------- */
+/* Navigation sticky : repli au clavier, en dehors du menu et au changement de largeur. */
 (() => {
-  const b = document.getElementById("burger"), m = document.getElementById("menu");
+  const b = document.getElementById('burger'), m = document.getElementById('menu');
   if (!b || !m) return;
-  const fermer = () => { m.classList.remove("ouvert"); b.setAttribute("aria-expanded", "false"); b.textContent = "☰"; };
-  b.addEventListener("click", () => {
-    const o = m.classList.toggle("ouvert");
-    b.setAttribute("aria-expanded", String(o)); b.textContent = o ? "✕" : "☰";
+  const set = open => {
+    m.classList.toggle('ouvert', open);
+    b.setAttribute('aria-expanded', String(open)); b.textContent = open ? '✕' : '☰';
+  };
+  b.addEventListener('click', () => set(!m.classList.contains('ouvert')));
+  m.addEventListener('click', e => {
+    const link = e.target.closest('a'); if (!link) return;
+    const target = link.hash && document.getElementById(link.hash.slice(1));
+    if (m.classList.contains('ouvert')) { set(false); if (target) { target.tabIndex = -1; target.focus({preventScroll:true}); } }
   });
-  m.addEventListener("click", e => { if (e.target.closest("a")) fermer(); });
-  document.addEventListener("keydown", e => { if (e.key === "Escape") fermer(); });
+  document.addEventListener('pointerdown', e => { if (!b.contains(e.target) && !m.contains(e.target)) set(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && m.classList.contains('ouvert')) { set(false); b.focus(); } });
+  matchMedia('(max-width: 1279px)').addEventListener('change', () => set(false));
 })();
 
-/* ---------- Musique d'ambiance : essaie de démarrer toute seule (si le navigateur l'autorise),
-   sinon au premier appui ; se coupe avec le bouton 🔊, la ligne « Musique » de l'accueil ou l'image de Ragnar ---------- */
+/* Aucun démarrage automatique, pas même au premier tap ni après un ancien choix enregistré. */
 const musique = (() => {
-  const audio = document.getElementById("bgMusic");
-  const btn = document.getElementById("musicBtn");
-  const note = document.getElementById("musicNote");
-  const boutons = Array.from(document.querySelectorAll("#musicBtn, [data-music-toggle]"));
+  const audio = document.getElementById('bgMusic');
+  const boutons = Array.from(document.querySelectorAll('#musicBtn, [data-music-toggle]'));
   if (!audio || !boutons.length) return {pause() {}};
-  let voulu = true;
-  try { voulu = localStorage.getItem("musique") !== "off"; } catch (e) {}
-  const garder = v => { try { localStorage.setItem("musique", v); } catch (e) {} };
-  audio.volume = 0.35;
+  const en = document.documentElement.lang === 'en';
+  audio.volume = .35;
+  const note = document.getElementById('music-status');
+  let playingRequest = 0, pending = false;
   const maj = () => {
     const joue = !audio.paused;
-    if (btn) {
-      btn.setAttribute("aria-pressed", String(joue));
-      btn.setAttribute("aria-label", (document.documentElement.lang==="en") ? (joue ? "Mute the music" : "Play the music") : (joue ? "Couper la musique" : "Activer la musique"));
-      btn.textContent = joue ? "🔊" : "🔇";
-    }
-    document.querySelectorAll(".art-music .mi").forEach(i => { i.textContent = joue ? "🔊" : "🔇"; });
-    if (note) note.textContent = (document.documentElement.lang==="en") ? (joue ? "🔊 Music on · tap here to mute it" : (voulu ? "🔇 Tap here to start the music" : "🔇 Music off · tap here to turn it back on"))
-      : (joue ? "🔊 Musique activée · touche ici pour la couper"
-      : (voulu ? "🔇 Touche ici pour lancer la musique" : "🔇 Musique coupée · touche ici pour la relancer"));
+    boutons.forEach(b => {
+      b.setAttribute('aria-pressed', String(joue));
+      b.setAttribute('aria-label', joue ? (en ? 'Mute the music' : 'Couper la musique') : (en ? 'Play the music' : 'Activer la musique'));
+      if (b.id === 'musicBtn') b.textContent = joue ? '♫' : '♪';
+    });
   };
-  const lancer = async () => { try { await audio.play(); } catch (e) {} maj(); };
-  boutons.forEach(b => b.addEventListener("click", e => {
-    e.preventDefault();
-    if (!audio.paused) { voulu = false; garder("off"); audio.pause(); }
-    else { voulu = true; garder("on"); lancer(); }
-    maj();
-  }));
-  ["play", "pause", "ended"].forEach(ev => audio.addEventListener(ev, maj));
-  audio.addEventListener("error", () => { if (note) note.textContent = "Musique indisponible pour le moment."; });
-  if (voulu) {
-    // Essai de démarrage automatique une fois la page chargée (le fichier n'est téléchargé qu'à ce moment-là).
-    const auto = () => { if (voulu && audio.paused && !videoJoue()) lancer(); };
-    if (document.readyState === "complete") setTimeout(auto, 300); else window.addEventListener("load", () => setTimeout(auto, 300), {once: true});
-    // Les navigateurs refusent souvent un son sans geste : on relance au premier appui (sauf sur la vidéo ou un bouton musique).
-    const evs = ["pointerdown", "keydown"];
-    const retirer = () => evs.forEach(ev => window.removeEventListener(ev, premier, true));
-    const premier = e => {
-      const t = e && e.target && e.target.closest ? e.target : null;
-      if (t && t.closest("#musicBtn, [data-music-toggle]")) { retirer(); return; }
-      if (t && t.closest(".hero-video")) { retirer(); return; }
-      retirer(); if (voulu && audio.paused && !videoJoue()) lancer();
-    };
-    evs.forEach(ev => window.addEventListener(ev, premier, true));
-  }
-  maj();
-  return {pause() { if (!audio.paused) audio.pause(); }};
+  const pause = () => { playingRequest++; pending=false; audio.pause(); maj(); };
+  const toggle = async () => {
+    if (!audio.paused || pending) return pause();
+    const id = ++playingRequest; pending = true;
+    if (note) note.textContent = '';
+    try { await audio.play(); }
+    catch (error) { if (id === playingRequest && note) note.textContent = en ? 'Music is unavailable.' : 'Musique indisponible.'; }
+    finally { if (id === playingRequest) pending = false; maj(); }
+  };
+  boutons.forEach(b => b.addEventListener('click',toggle));
+  ['play','pause','ended'].forEach(ev => audio.addEventListener(ev,maj));
+  maj(); return {pause};
 })();
-
-/* ---------- Bande-annonce : la musique du site se coupe quand la vidéo YouTube est lancée ---------- */
-function videoJoue() { return !!window.ytLancee; }
 
 /* ---------- Fiches des combattants ---------- */
 (() => {
@@ -108,6 +90,7 @@ function videoJoue() { return !!window.ytLancee; }
     const f = li.querySelector(".fiche");
     if (!f) return;
     zone.innerHTML = f.innerHTML;
+    const titre = zone.querySelector('.fiche-titre'); if (titre) titre.id = 'fiche-titre';
     zone.querySelectorAll("img[data-src]").forEach(i => { i.src = i.dataset.src; i.removeAttribute("data-src"); });
     retour = li.querySelector(".f-btn");
     if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
@@ -123,16 +106,48 @@ function videoJoue() { return !!window.ytLancee; }
   if (/^perso-/.test(h)) { const li = document.getElementById(h); if (li) ouvrir(li); }
 })();
 
-/* ---------- Captures : agrandissement ---------- */
+/* ---------- Captures : agrandissement et parcours clavier de la galerie ---------- */
 (() => {
   const dlg = document.getElementById("lightbox"), img = document.getElementById("lbImg"), cap = document.getElementById("lbCap");
   if (!dlg) return;
+  const en = document.documentElement.lang === "en";
+  const shots = Array.from(document.querySelectorAll("#galerie .shot"));
+  const controls = document.createElement("div");
+  controls.className = "lightbox-gallery"; controls.hidden = true;
+  const count = document.createElement("span");
+  count.setAttribute("role", "status");
+  let pos = -1, retour = null;
+  const draw = b => {
+    const photo = b.querySelector("img");
+    img.src = b.dataset.full || photo.dataset.full || photo.currentSrc || photo.src;
+    img.alt = b.dataset.cap || ""; cap.textContent = b.dataset.cap || "";
+    if (pos >= 0) count.textContent = `${pos + 1} / ${shots.length}`;
+  };
+  const move = direction => {
+    if (pos < 0) return;
+    pos = (pos + direction + shots.length) % shots.length;
+    draw(shots[pos]);
+  };
+  [["‹",en ? "Previous image" : "Image précédente",-1],["›",en ? "Next image" : "Image suivante",1]].forEach(([glyph,label,dir],i) => {
+    const bt = document.createElement("button");
+    bt.type = "button"; bt.textContent = glyph; bt.setAttribute("aria-label", label);
+    bt.addEventListener("click", () => move(dir)); controls.appendChild(bt);
+    if (i === 0) controls.appendChild(count);
+  });
+  dlg.appendChild(controls);
   document.querySelectorAll(".shot").forEach(b => b.addEventListener("click", () => {
-    const src = b.dataset.full || b.querySelector("img").currentSrc || b.querySelector("img").src;
-    img.src = src; img.alt = b.dataset.cap || ""; cap.textContent = b.dataset.cap || "";
-    if (dlg.showModal) dlg.showModal(); else window.open(src, "_blank");
+    pos = shots.indexOf(b); retour = b;
+    controls.hidden = pos < 0;
+    draw(b);
+    if (dlg.showModal) dlg.showModal(); else window.open(img.src, "_blank");
   }));
+  dlg.addEventListener("keydown", e => {
+    if (pos >= 0 && (e.key === "ArrowLeft" || e.key === "ArrowRight")) {
+      e.preventDefault(); move(e.key === "ArrowLeft" ? -1 : 1);
+    }
+  });
   dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener("close", () => { if (retour) retour.focus({preventScroll:true}); });
 })();
 
 /* ---------- Formulaire : prépare un e-mail (rien n'est envoyé par le site) ---------- */
@@ -149,26 +164,45 @@ function videoJoue() { return !!window.ytLancee; }
   });
 })();
 
-/* ---------- Bande-annonce officielle (YouTube) : rien n'est chargé chez YouTube avant le clic ---------- */
+/* ---------- Bande-annonce : démarre au clic, arrête et rend le focus à la fermeture ---------- */
 (() => {
   const c = document.getElementById("trailerYT");
   if (!c) return;
-  const b = c.querySelector(".video-play");
-  const lancer = () => {
-    if (c.querySelector("iframe")) return;
-    const f = document.createElement("iframe");
+  const img = c.querySelector(".yt-affiche"), b = c.querySelector(".video-play");
+  if (!b || !img) return;
+  const en = document.documentElement.lang === "en";
+  const fermer = document.createElement("button");
+  fermer.type = "button";
+  fermer.className = "trailer-close";
+  fermer.textContent = en ? "Close ✕" : "Fermer ✕";
+  fermer.setAttribute("aria-label", en ? "Close the trailer" : "Fermer la bande-annonce");
+  fermer.hidden = true;
+  c.appendChild(fermer);
+  let f = null;
+  const arreter = () => {
+    if (!f) return;
+    f.remove(); f = null;
+    window.ytLancee = false;
+    fermer.hidden = true;
+    img.hidden = false; b.hidden = false;
+    b.focus({preventScroll:true});
+  };
+  b.addEventListener("click", () => {
+    if (f) return;
+    f = document.createElement("iframe");
     f.src = "https://www.youtube-nocookie.com/embed/" + c.dataset.yt + "?autoplay=1&rel=0&playsinline=1";
-    f.title = (document.documentElement.lang==="en") ? "Arenas of Origins: official trailer" : "Arènes des Origines : bande-annonce officielle";
+    f.title = en ? "Arenas of Origins: official trailer" : "Arènes des Origines : bande-annonce officielle";
     f.width = 540; f.height = 960;
     f.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
     f.referrerPolicy = "strict-origin-when-cross-origin";
     f.allowFullscreen = true;
     window.ytLancee = true;
-    try { musique.pause(); } catch (e) {}
-    const img = c.querySelector(".yt-affiche");
-    if (img) img.remove();
-    if (b) b.remove();
-    c.appendChild(f);
-  };
-  if (b) b.addEventListener("click", lancer);
+    musique.pause();
+    img.hidden = true; b.hidden = true;
+    c.insertBefore(f, fermer);
+    fermer.hidden = false;
+    fermer.focus({preventScroll:true});
+  });
+  fermer.addEventListener("click", arreter);
+  c.addEventListener("keydown", e => { if (e.key === "Escape" && f) arreter(); });
 })();

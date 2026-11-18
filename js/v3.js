@@ -1,22 +1,10 @@
-/* v3 : apparitions douces, flèches des carrousels, bouton flottant de téléchargement */
+/* Vitrine : flèches des carrousels, téléchargement mobile, images repliées. */
 (function(){
   "use strict";
   var reduit = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  // apparitions
-  if ("IntersectionObserver" in window && !reduit) {
-    document.documentElement.classList.add("js-rv");
-    var cibles = document.querySelectorAll("main section:not(.hero3) h2, main section:not(.hero3) .lead, .carte, .roster li, .galerie figure, .shorts li, .plus3");
-    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting || e.boundingClientRect.top < 0){ e.target.classList.add("in"); io.unobserve(e.target);} }); }, {rootMargin:"0px 0px 6% 0px", threshold:0.05});
-    cibles.forEach(function(el){ el.classList.add("rv"); io.observe(el); });
-    // saut d'ancre ou défilement rapide : tout ce qui est déjà passé au-dessus apparaît aussi
-    var att = false;
-    var balaye = function(){ att = false; var lim = window.innerHeight * 1.02; cibles.forEach(function(el){ if (!el.classList.contains("in") && el.getBoundingClientRect().top < lim) el.classList.add("in"); }); };
-    window.addEventListener("scroll", function(){ if (!att){ att = true; requestAnimationFrame(balaye); } }, {passive:true});
-    window.addEventListener("hashchange", balaye);
-    setTimeout(function(){ cibles.forEach(function(el){ el.classList.add("in"); }); }, 8000); // filet de sécurité
-  }
   // flèches des carrousels (ordinateur)
   document.querySelectorAll(".carrousel").forEach(function(c){
+    if(c.closest("#galerie")) return;
     var nav = document.createElement("div"); nav.className = "car-nav";
     ((document.documentElement.lang==="en") ? [["‹","Previous",-1],["›","Next",1]] : [["‹","Précédent",-1],["›","Suivant",1]]).forEach(function(b){
       var bt = document.createElement("button"); bt.type = "button"; bt.textContent = b[0]; bt.setAttribute("aria-label", b[1]);
@@ -25,22 +13,17 @@
     });
     c.parentNode.insertBefore(nav, c.nextSibling);
   });
-  // bouton flottant : visible après le héros, caché au pied de page
-  var cta = document.getElementById("ctaFlottant"), hero = document.getElementById("accueil"), pied = document.querySelector("footer");
-  if (cta && hero && "IntersectionObserver" in window) {
-    var etat = {hero:true, pied:false};
+  // Raccourci de téléchargement, uniquement hors accueil, stores et pied de page.
+  var cta = document.getElementById("ctaFlottant"), hero = document.getElementById("accueil"), stores = document.getElementById("telecharger"), pied = document.querySelector("footer");
+  if (cta && hero && stores && pied && "IntersectionObserver" in window) {
+    var rel = [hero, stores, pied];
+    var masques = new Set(rel); // Ne rien afficher avant d'avoir reçu le premier relevé.
     var io = new IntersectionObserver(function(es){
-      es.forEach(function(e){ etat[e.target === hero ? "hero" : "pied"] = e.isIntersecting; });
-      cta.classList.toggle("vu", !etat.hero && !etat.pied);
+      es.forEach(function(e){ if(e.isIntersecting) masques.add(e.target); else masques.delete(e.target); });
+      cta.hidden = masques.size > 0;
     });
-    io.observe(hero); if (pied) io.observe(pied);
-  }
-  // bulle « Touche Ragnar pour le son » : texte selon l'état de la musique, disparaît au premier toucher de Ragnar
-  var bulle = document.getElementById("bulleSon"), rag = document.querySelector(".ragnar3-btn"), aud = document.getElementById("bgMusic");
-  if (bulle && rag) {
-    var majBulle = function(){ if (aud) bulle.textContent = (document.documentElement.lang==="en") ? (aud.paused ? "🔊 Tap Ragnar for sound" : "🔇 Tap Ragnar to mute") : (aud.paused ? "🔊 Touche Ragnar pour le son" : "🔇 Touche Ragnar pour couper le son"); };
-    if (aud) ["play","pause"].forEach(function(ev){ aud.addEventListener(ev, majBulle); });
-    rag.addEventListener("click", function(){ bulle.classList.add("parti"); rag.classList.add("touche"); setTimeout(function(){ bulle.hidden = true; }, 450); });
+    stores.tabIndex = -1;
+    rel.forEach(function(el){ io.observe(el); });
   }
   // contenus repliés : leurs images se chargent dès l'ouverture (WebKit/Safari ne les chargeait pas toujours en « lazy »)
   document.querySelectorAll("details").forEach(function(d){
